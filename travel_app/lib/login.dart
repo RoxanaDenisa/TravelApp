@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:travel_app/TextFieldWidget.dart';
 import 'package:travel_app/buttonWidget.dart';
@@ -51,6 +52,7 @@ class _MyLoginState extends State<MyLogin>{
                    width:260,
                  child:Column(
                    children:<Widget>[
+                     Text('\n',style: TextStyle(fontSize: 4)),
                      TextFieldWidget(
                       hintText: 'Username',
                       obscureText: false,
@@ -74,11 +76,16 @@ class _MyLoginState extends State<MyLogin>{
           ,),
         ),
         ),
-        Container(
-          padding: EdgeInsets.only(top: 35.0),
-          child: Center(
-          child: Column(
-               children:<Widget>[
+       
+        ]
+    ),
+     floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+          floatingActionButton: MaterialButton(height:70,
+          onPressed: (){},
+          child:Container(
+              height: 70,
+            child:Column(   
+        children:<Widget>[
                 IconButton(
                   onPressed: () {
                     
@@ -96,8 +103,7 @@ class _MyLoginState extends State<MyLogin>{
                   ),
                   iconSize: 40.0,
                   ),
-               
-                Text(
+                  Text(
                   'If you do not have an account, you can join right now !',
                 style: TextStyle(
                     color: Colors.white,
@@ -105,12 +111,8 @@ class _MyLoginState extends State<MyLogin>{
                     ),
                     textAlign: TextAlign.center,
                 )
-               ] 
-          ,),
-        )
-        )
-        ]
-    )
+          ])) ) 
+    
     );
   }
 }
