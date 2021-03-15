@@ -100,16 +100,8 @@ class _MyHomePageState extends State<MyHomePage>{
                     color: Colors.white,
                   ),
                   iconSize: 40.0,
-                  )
-               ] 
-          ,),
-          )
-        ),
-         Container(
-          padding: EdgeInsets.only(top: 0.0,left: 35.0,right: 20.0),
-          
-          child: Column(
-               children:<Widget>[
+                  ),
+               
                 Text(
                   'If you do not have an account, you can join right now !',
                 style: TextStyle(
@@ -121,7 +113,8 @@ class _MyHomePageState extends State<MyHomePage>{
                ] 
           ,),
         )
-        ],
+        )
+        ]
     )
     );
   }
