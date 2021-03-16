@@ -110,9 +110,10 @@ class _MyLoginState extends State<MyLogin>{
                     fontSize: 12
                     ),
                     textAlign: TextAlign.center,
+
                 )
-          ])) ) 
-    
+
+          ])) )
     );
   }
 }

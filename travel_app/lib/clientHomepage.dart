@@ -88,6 +88,7 @@ class _MyClientHomepage extends State<MyClientHomepage>{
               Center(
                child: Container(
                  width:300,
+                 height:180,
                child: Row(
                    children:<Widget>[
                      Container(
@@ -98,7 +99,7 @@ class _MyClientHomepage extends State<MyClientHomepage>{
                          Container(
                            width:150,
                          child:Text(
-                           '  Welcome!',
+                           '\n\n\n  Welcome!',
                            textAlign: TextAlign.left,
                            style: TextStyle(
                              color: Colors.grey,
@@ -119,14 +120,29 @@ class _MyClientHomepage extends State<MyClientHomepage>{
                             image: AssetImage('assets/earth.png'),
                             width:150,
                             height:150
-                            )
-                      
+                            ),
+                  
                  ]
-                ))
-              )]
+                )),
+                
+              ),
+              Container(
+                width: (MediaQuery.of(context).size.width),
+                child:Expanded(
+                child:Align(
+            alignment: FractionalOffset.bottomCenter,
+            child: 
+              Image(
+                            image: AssetImage('assets/HomeC.png'),
+                            width: (MediaQuery.of(context).size.width),
+              )
+           
+               ) ))]
 
             
         ),
+        
+       
       ),
     );
   }
