@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:travel_app/clientHomepage.dart';
 
 class MyReservations extends StatefulWidget {
   @override
@@ -26,7 +27,10 @@ class _MyReservations extends State<MyReservations> {
                     padding: EdgeInsets.only(right: 10),
                   ),
                   TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => MyClientHomepage()));
+                      },
                       style: TextButton.styleFrom(
                           backgroundColor: Colors.orange[800]),
                       child: Text(
@@ -34,7 +38,10 @@ class _MyReservations extends State<MyReservations> {
                         style: TextStyle(color: Colors.white),
                       )),
                   TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => MyReservations()));
+                      },
                       child: Text(
                         'Reservations',
                         style: TextStyle(color: Colors.white),
@@ -100,23 +107,52 @@ class _MyReservations extends State<MyReservations> {
                           style: TextStyle(fontSize: 10),
                         )
                       ])))),
-              Center(
-                  child: DataTable(
-                columns: <DataColumn>[
-                  DataColumn(label: Text('Hotel name '), numeric: false),
-                  DataColumn(label: Text('Date '), numeric: false),
-                  DataColumn(label: Text('Price '), numeric: false),
-                  DataColumn(label: Text('Status '), numeric: false),
-                ],
-                rows: <DataRow>[
-                  DataRow(cells: <DataCell>[
-                    DataCell(Text('Hilton Hotel London')),
-                    DataCell(Text('20.05.2020 - 25.05.2020   ')),
-                    DataCell(Text('500')),
-                    DataCell(Text('Passed')),
-                  ])
-                ],
-              ))
+              Container(
+                  width: 300,
+                  height: (MediaQuery.of(context).size.height * 2 / 3),
+                  child: ListView(
+                      scrollDirection: Axis.vertical,
+                      children: <Widget>[
+                        Container(
+                            width: 300,
+                            height:
+                                (MediaQuery.of(context).size.height * 2 / 3),
+                            child: ListView(
+                                scrollDirection: Axis.horizontal,
+                                children: <Widget>[
+                                  DataTable(
+                                    headingRowColor:
+                                        MaterialStateColor.resolveWith((state) {
+                                      return Colors.orange[800];
+                                    }),
+                                    headingTextStyle: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    columns: <DataColumn>[
+                                      DataColumn(
+                                          label: Text('Hotel name'),
+                                          numeric: false),
+                                      DataColumn(
+                                          label: Text('Date'), numeric: false),
+                                      DataColumn(
+                                          label: Text('Price'), numeric: false),
+                                      DataColumn(
+                                          label: Text('Status'),
+                                          numeric: false),
+                                    ],
+                                    rows: <DataRow>[
+                                      DataRow(cells: <DataCell>[
+                                        DataCell(Text('Hilton Hotel London')),
+                                        DataCell(
+                                            Text('20.05.2020 - 25.05.2020   ')),
+                                        DataCell(Text('500')),
+                                        DataCell(Text('Passed')),
+                                      ])
+                                    ],
+                                  )
+                                ]))
+                      ]))
             ])));
   }
 }
