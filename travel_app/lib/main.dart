@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:travel_app/login.dart';
+import 'package:travel_app/clientHomepage.dart';
 //import 'package:flutter_auth/Screens/Welcome/components/background.dart';
 //import 'package:flutter_svg/svg.dart';
 
@@ -9,7 +9,7 @@ class MyApp extends StatelessWidget{
   Widget build(BuildContext context) {
       return new MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: new MyLogin(),
+        home: new MyClientHomepage(),
         );
       
   }
