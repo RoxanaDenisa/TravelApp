@@ -1,7 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:travel_app/TextFieldWidget.dart';
 import 'package:travel_app/buttonWidget.dart';
 import 'package:travel_app/login.dart';
+import 'package:travel_app/authenticationService.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 class MySignUp extends StatefulWidget {
   @override
@@ -11,6 +14,7 @@ class MySignUp extends StatefulWidget {
 class _MySignUp extends State<MySignUp> {
   bool checkBoxValue = false;
   bool checkBoxValue2 = false;
+  String email, password='', name, uname, phone;
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -39,30 +43,47 @@ class _MySignUp extends State<MySignUp> {
             TextFieldWidget(
                 hintText: 'Name',
                 obscureText: false,
-                prefixIconData: Icons.verified_user),
+                prefixIconData: Icons.verified_user,
+                onChanged:(value){
+                        setState(() => name=value);
+                      },
+                ),
             Text('\n', style: TextStyle(fontSize: 2)),
             TextFieldWidget(
               hintText: 'Username',
               obscureText: false,
               prefixIconData: Icons.person,
+               onChanged:(value){
+                        setState(() => uname=value);
+                      },
+                
             ),
             Text('\n', style: TextStyle(fontSize: 2)),
             TextFieldWidget(
               hintText: 'Password',
               obscureText: true,
               prefixIconData: Icons.vpn_key,
+               onChanged:(value){
+                        setState(() => password=value);
+                      },
             ),
             Text('\n', style: TextStyle(fontSize: 2)),
             TextFieldWidget(
               hintText: 'Phone Number',
               obscureText: false,
               prefixIconData: Icons.phone,
+               onChanged:(value){
+                        setState(() => phone=value);
+                      },
             ),
             Text('\n', style: TextStyle(fontSize: 2)),
             TextFieldWidget(
               hintText: 'Email',
               obscureText: false,
               prefixIconData: Icons.email,
+               onChanged:(value){
+                        setState(() => email=value);
+                      },
             ),
             Text('\n', style: TextStyle(fontSize: 2)),
             Row(
@@ -72,7 +93,6 @@ class _MySignUp extends State<MySignUp> {
                 Checkbox(
                   value: checkBoxValue,
                   onChanged: (bool value) {
-                    print(value);
                     setState(() {
                       checkBoxValue = value;
                       if (checkBoxValue == true) {
@@ -86,7 +106,6 @@ class _MySignUp extends State<MySignUp> {
                 Checkbox(
                   value: checkBoxValue2,
                   onChanged: (bool value) {
-                    print(value);
                     setState(() {
                       checkBoxValue2 = value;
                       if (checkBoxValue2 == true) {
@@ -100,7 +119,31 @@ class _MySignUp extends State<MySignUp> {
             ),
             ButtonWidget(
               title: 'Create',
-              onPressed: () {},
+              onPressed: () async {
+                int sw=0;
+                if(queryData(email).toString()!="Instance of 'Future<dynamic>'")
+                print(queryData(email).toString());
+                else
+                if(password.length>6&&sw==0){
+               try{
+                  await Firebase.initializeApp();
+                   await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email, password: password);
+                  User updateUser=FirebaseAuth.instance.currentUser;
+                  updateUser.updateProfile(displayName: name);
+                  userSetup(name,email,phone,uname,checkBoxValue,checkBoxValue2);
+               }on FirebaseAuthException catch  (_) {
+                   Navigator.of(context)
+                   .push(MaterialPageRoute(builder: (context) => MySignUp()));
+
+               }
+               catch(e)
+               {
+                  print(e.toString());
+               }}
+               else
+               print('nu');
+
+              },
             )
           ],
         ),

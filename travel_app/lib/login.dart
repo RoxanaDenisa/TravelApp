@@ -1,91 +1,97 @@
-
 import 'package:flutter/material.dart';
 import 'package:travel_app/TextFieldWidget.dart';
 import 'package:travel_app/buttonWidget.dart';
+import 'package:travel_app/clientHomepage.dart';
 import 'package:travel_app/signUp.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class MyLogin extends StatefulWidget{
   @override
   _MyLoginState createState()=>new _MyLoginState();
 
 }
 class _MyLoginState extends State<MyLogin>{
+  String _email,_password;
   @override
   Widget build(BuildContext context){
     return new Scaffold(
       backgroundColor: Colors.deepOrange[600],
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Container(
-            child: Stack(
-              children: <Widget>[
-                Center(
-                child:Container(
-                  padding: EdgeInsets.fromLTRB(0.0, 70.0, 0.0, 0.0),
-                  child: Text(
-                    'Travel\n    App',
-                    style: TextStyle(
-                      color: Colors.green[800],
-                      fontSize: 60.0, fontWeight: FontWeight.bold,
-                      fontFamily: 'Raleway'
-                      )))),
-                      Center(
-                      child: Container(
-                        padding: EdgeInsets.only(right:100,top:130),
-                          child: Image(
-                            image: AssetImage('assets/logo.png'),
-                            width:90,
-                            height:90
-                            )
-                      )),
-                
-            ],
-          ),  
-      ),
-        Container(
-          //padding: EdgeInsets.only(top: 30.0,left: 20.0,right: 20.0),
-          child: Center(
-          child: Column(
-               
-               children:<Widget>[
-                 Container(
-                   width:260,
-                 child:Column(
-                   children:<Widget>[
-                     Text('\n',style: TextStyle(fontSize: 4)),
+      body: ListView(
+           scrollDirection: Axis.vertical,
+           padding: EdgeInsets.only(left:45,right:45,top: (MediaQuery.of(context).size.height *1/14)),
+           children: <Widget>[
+                        Image(
+                      image: AssetImage('assets/logo.png'),
+                      width: 200,
+                      height: 200),
+                                  Text('\n',style: TextStyle(fontSize: 4)),
                      TextFieldWidget(
-                      hintText: 'Username',
+                      onChanged: (value){
+                        setState(() {
+                            _email=value.trim();
+                                                });
+                      },
+                      hintText: 'Email',
                       obscureText: false,
                       prefixIconData: Icons.person,
                       ),
                  
-                     Text('\n',style: TextStyle(fontSize: 2)),
+                     Text('\n',style: TextStyle(fontSize: 4)),
                      TextFieldWidget(
+                       onChanged: (value){
+                        setState(() {
+                            _password=value.trim();
+                                                });
+                      },
                      hintText: 'Password',
                      obscureText: true,
                      prefixIconData: Icons.vpn_key,
                      ),
-                     Text('\n',style: TextStyle(fontSize: 4)),
-                   ],),),
-                 ButtonWidget(
-                  onPressed: () {
+                     Text('\n',style: TextStyle(fontSize: 10)),
+                     Container(
+                       height:80,
+                      child:ListView(
+                      padding: EdgeInsets.only(left:60,right:60),
+                      children:<Widget>[
+                      ButtonWidget(
+                      onPressed: () async {
+                      await FirebaseAuth.instance.signInWithEmailAndPassword(email: _email, password: _password);
+                      FirebaseAuth auth=FirebaseAuth.instance;
+                      String uid=auth.currentUser.uid.toString();
+                      
+                      CollectionReference collectionReference= FirebaseFirestore.instance.collection('Users');
+                      // ignore: missing_return
+                      collectionReference.snapshots().listen((snapshot)
+                      {
+                           for(int i=0; i<snapshot.size; i++)
+                           {
+                              if(snapshot.docs[i]['uid']==uid)
+                              if(snapshot.docs[i]['Customer']==true){
+                                print(uid);
+                               Navigator.of(context).push(
+                                MaterialPageRoute(
+                            builder: (context)=>MyClientHomepage()
+                      ));
+                      }
+                           }
+                      
+                      });
+                      
                   },
                   title: 'Login'
-                )
-               ] 
-          ,),
-        ),
-        ),
-       
-        ]
-    ),
-     floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-          floatingActionButton: MaterialButton(height:70,
-          onPressed: (){},
-          child:Container(
-              height: 70,
-            child:Column(   
-        children:<Widget>[
+                )]
+
+                ,))
+          
+           ],
+           ),
+            bottomNavigationBar:  Container(
+                height: 100,
+                alignment: Alignment.bottomCenter,
+                width: (MediaQuery.of(context).size.width),
+                child: Column(
+                                children:<Widget>[
                 IconButton(
                   onPressed: () {
                     
@@ -113,7 +119,11 @@ class _MyLoginState extends State<MyLogin>{
 
                 )
 
-          ])) )
+          ]
+,)
+
+              ),
+     
     );
   }
 }

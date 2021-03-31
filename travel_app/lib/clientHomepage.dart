@@ -14,7 +14,7 @@ class _MyClientHomepage extends State<MyClientHomepage> {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-            toolbarHeight: 50,
+            toolbarHeight: 60,
             backgroundColor: Colors.deepOrange[600],
             title: Text("Travel",
                 style: TextStyle(
@@ -44,7 +44,9 @@ class _MyClientHomepage extends State<MyClientHomepage> {
                     style: TextStyle(color: Colors.white),
                   )),
             ]),
-        body: Column(children: <Widget>[
+        body: ListView(
+          scrollDirection: Axis.vertical,
+          children: <Widget>[
           AppBar(
               toolbarHeight: 40,
               backgroundColor: Colors.grey[350],
@@ -58,13 +60,11 @@ class _MyClientHomepage extends State<MyClientHomepage> {
               ]),
               actions: <Widget>[
                 Padding(
-                  padding: EdgeInsets.only(right: 13),
+                  padding: EdgeInsets.only(right: 23),
                 ),
                 Container(
                     width: 200,
-                    height: 10,
                     child: TextField(
-                        cursorHeight: 25,
                         selectionHeightStyle: BoxHeightStyle.tight,
                         decoration: InputDecoration(
                             hintText: 'Search',
@@ -79,7 +79,7 @@ class _MyClientHomepage extends State<MyClientHomepage> {
                               borderRadius: BorderRadius.circular(40),
                               borderSide: BorderSide(color: Colors.green[800]),
                             ),
-                            focusedBorder: OutlineInputBorder(
+                            focusedBorder: UnderlineInputBorder(
                               borderRadius: BorderRadius.circular(40),
                               borderSide: BorderSide(color: Colors.green[800]),
                             ))))
@@ -115,15 +115,14 @@ class _MyClientHomepage extends State<MyClientHomepage> {
                       height: 150),
                 ])),
           ),
-          Container(
-              width: (MediaQuery.of(context).size.width),
-              child: Expanded(
-                  child: Align(
-                      alignment: FractionalOffset.bottomCenter,
+           Positioned.fill(
+             // width: (MediaQuery.of(context).size.width),
+            
                       child: Image(
                         image: AssetImage('assets/HomeC.png'),
                         width: (MediaQuery.of(context).size.width),
-                      ))))
+                        alignment: Alignment.bottomCenter,
+                      ))
         ]),
       ),
     );

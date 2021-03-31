@@ -12,8 +12,8 @@ class ButtonWidget extends StatelessWidget{
   Widget build(BuildContext context)
   {
     return MaterialButton(
-      height: 40,
-      minWidth: 150,
+      height: 50,
+      minWidth: 50,
       onPressed: onPressed,
       splashColor: Colors.green[600],
       color: Colors.green[700],

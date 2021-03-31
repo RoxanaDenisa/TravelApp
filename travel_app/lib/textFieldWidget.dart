@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -8,6 +6,7 @@ class TextFieldWidget extends StatelessWidget{
   final IconData prefixIconData;
   final bool obscureText;
   final Function onChanged;
+  
   TextFieldWidget({
     this.hintText,
     this.prefixIconData,
@@ -17,6 +16,7 @@ class TextFieldWidget extends StatelessWidget{
   @override
   Widget build(BuildContext context){
     return TextField(
+      onChanged: onChanged,
       obscureText: obscureText,
       decoration: InputDecoration(
         hintText: hintText,
@@ -28,14 +28,16 @@ class TextFieldWidget extends StatelessWidget{
         filled: true,
         fillColor: Colors.deepOrange[200],
         
-        enabledBorder: UnderlineInputBorder(
+       enabledBorder: UnderlineInputBorder(
           borderRadius: BorderRadius.circular(40),
           borderSide: BorderSide(color: Colors.green[800]),
         ),
-        focusedBorder: OutlineInputBorder(
+        focusedBorder: UnderlineInputBorder(
           borderRadius: BorderRadius.circular(40),
           borderSide: BorderSide(color: Colors.green[800]),
+          
         )
+        //border: OutlineInputBorder(borderRadius: BorderRadius.circular(40)),
       )
       
     );
