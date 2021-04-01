@@ -1,7 +1,7 @@
-class Images {
+class MyImages {
   String image;
   String uid;
-  Images({
+  MyImages({
     this.image,
     this.uid,
   });
