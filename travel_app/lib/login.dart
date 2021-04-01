@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:travel_app/TextFieldWidget.dart';
 import 'package:travel_app/buttonWidget.dart';
 import 'package:travel_app/clientHomepage.dart';
+import 'package:travel_app/companyAdd.dart';
 import 'package:travel_app/signUp.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -68,8 +69,12 @@ class _MyLoginState extends State<MyLogin> {
                             if (snapshot.docs[i]['uid'] ==
                                 uid) if (snapshot.docs[i]['Customer'] == true) {
                               print(uid);
+
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) => MyClientHomepage()));
+                            } else {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => MyCompanyAdd()));
                             }
                           }
                         });
