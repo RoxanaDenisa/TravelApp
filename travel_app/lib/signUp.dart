@@ -14,7 +14,7 @@ class MySignUp extends StatefulWidget {
 class _MySignUp extends State<MySignUp> {
   bool checkBoxValue = false;
   bool checkBoxValue2 = false;
-  String email, password='', name, uname, phone;
+  String email, password = '', name, uname, phone;
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -41,49 +41,48 @@ class _MySignUp extends State<MySignUp> {
             ),
             Text('\n', style: TextStyle(fontSize: 10)),
             TextFieldWidget(
-                hintText: 'Name',
-                obscureText: false,
-                prefixIconData: Icons.verified_user,
-                onChanged:(value){
-                        setState(() => name=value);
-                      },
-                ),
+              hintText: 'Name',
+              obscureText: false,
+              prefixIconData: Icons.verified_user,
+              onChanged: (value) {
+                setState(() => name = value);
+              },
+            ),
             Text('\n', style: TextStyle(fontSize: 2)),
             TextFieldWidget(
               hintText: 'Username',
               obscureText: false,
               prefixIconData: Icons.person,
-               onChanged:(value){
-                        setState(() => uname=value);
-                      },
-                
+              onChanged: (value) {
+                setState(() => uname = value);
+              },
             ),
             Text('\n', style: TextStyle(fontSize: 2)),
             TextFieldWidget(
               hintText: 'Password',
               obscureText: true,
               prefixIconData: Icons.vpn_key,
-               onChanged:(value){
-                        setState(() => password=value);
-                      },
+              onChanged: (value) {
+                setState(() => password = value);
+              },
             ),
             Text('\n', style: TextStyle(fontSize: 2)),
             TextFieldWidget(
               hintText: 'Phone Number',
               obscureText: false,
               prefixIconData: Icons.phone,
-               onChanged:(value){
-                        setState(() => phone=value);
-                      },
+              onChanged: (value) {
+                setState(() => phone = value);
+              },
             ),
             Text('\n', style: TextStyle(fontSize: 2)),
             TextFieldWidget(
               hintText: 'Email',
               obscureText: false,
               prefixIconData: Icons.email,
-               onChanged:(value){
-                        setState(() => email=value);
-                      },
+              onChanged: (value) {
+                setState(() => email = value);
+              },
             ),
             Text('\n', style: TextStyle(fontSize: 2)),
             Row(
@@ -120,29 +119,24 @@ class _MySignUp extends State<MySignUp> {
             ButtonWidget(
               title: 'Create',
               onPressed: () async {
-                int sw=0;
-                if(queryData(email).toString()!="Instance of 'Future<dynamic>'")
-                print(queryData(email).toString());
-                else
-                if(password.length>6&&sw==0){
-               try{
-                  await Firebase.initializeApp();
-                   await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email, password: password);
-                  User updateUser=FirebaseAuth.instance.currentUser;
-                  updateUser.updateProfile(displayName: name);
-                  userSetup(name,email,phone,uname,checkBoxValue,checkBoxValue2);
-               }on FirebaseAuthException catch  (_) {
-                   Navigator.of(context)
-                   .push(MaterialPageRoute(builder: (context) => MySignUp()));
-
-               }
-               catch(e)
-               {
-                  print(e.toString());
-               }}
-               else
-               print('nu');
-
+                int sw = 0;
+                if (password.length > 6 && sw == 0) {
+                  try {
+                    await Firebase.initializeApp();
+                    await FirebaseAuth.instance.createUserWithEmailAndPassword(
+                        email: email, password: password);
+                    User updateUser = FirebaseAuth.instance.currentUser;
+                    updateUser.updateProfile(displayName: name);
+                    userSetup(name, email, phone, uname, checkBoxValue,
+                        checkBoxValue2);
+                  } on FirebaseAuthException catch (_) {
+                    Navigator.of(context).push(
+                        MaterialPageRoute(builder: (context) => MySignUp()));
+                  } catch (e) {
+                    print(e.toString());
+                  }
+                } else
+                  print('nu');
               },
             )
           ],
