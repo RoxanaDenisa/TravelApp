@@ -1,5 +1,5 @@
+import 'package:uuid/uuid.dart';
 import 'dart:io';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +8,8 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:travel_app/objects/images.dart';
 import 'package:travel_app/reservation.dart';
 import 'package:travel_app/services/imageService.dart';
+import 'package:provider/provider.dart';
+import 'package:travel_app/providers/images_provider.dart';
 //import 'package:path/path.dart'
 
 class MyCompanyAdd extends StatefulWidget {
@@ -16,10 +18,11 @@ class MyCompanyAdd extends StatefulWidget {
 }
 
 class _MyCompanyAddState extends State<MyCompanyAdd> {
-  ImageProvider img;
   String _email, _password;
+  String imageURL;
   @override
   Widget build(BuildContext context) {
+    final imageProvider = Provider.of<ImagesProvider>(context);
     return new Scaffold(
         appBar: AppBar(
             toolbarHeight: 60,
@@ -92,10 +95,48 @@ class _MyCompanyAddState extends State<MyCompanyAdd> {
                                   height: 150,
                                   child: Row(children: <Widget>[
                                     IconButton(
-                                        onPressed: () {
-                                          //uploadImage(img.image);
-                                          print(FirebaseAuth
-                                              .instance.currentUser.uid);
+                                        onPressed: () async {
+                                          final _picker = ImagePicker();
+                                          final _storage =
+                                              FirebaseStorage.instance;
+                                          PickedFile image;
+                                          //check permission
+                                          await Permission.photos.request();
+                                          var permissionStatus =
+                                              await Permission.photos.status;
+                                          if (permissionStatus.isGranted) {
+                                            //select image
+                                            image = await _picker.getImage(
+                                                source: ImageSource.gallery);
+                                            var file = File(image.path);
+                                            if (image != null) {
+                                              //upload to firebase
+                                              String uuid = Uuid().v1();
+
+                                              var snapshot = await _storage
+                                                  .ref()
+                                                  .child('images')
+                                                  .child(uuid)
+                                                  .putFile(file);
+                                              var downloadURL = await snapshot
+                                                  .ref
+                                                  .getDownloadURL();
+                                              //print(downloadURL);
+                                              setState(() {
+                                                imageURL = downloadURL;
+                                              });
+                                              imageProvider.setImage(imageURL);
+                                              imageProvider.setUID(FirebaseAuth
+                                                  .instance.currentUser.uid);
+                                              imageProvider.toSave();
+                                              print(imageURL);
+                                            } else {
+                                              print('no path received');
+                                            }
+                                          } else {
+                                            print(
+                                                'grant permissions and try again');
+                                          }
                                         },
                                         icon: Icon(
                                           Icons.add_circle,
@@ -108,30 +149,5 @@ class _MyCompanyAddState extends State<MyCompanyAdd> {
         ]));
   }
 
-  uploadImage(String imageURL) async {
-    final _picker = ImagePicker();
-    final _storage = FirebaseStorage.instance;
-    PickedFile image;
-    //check permission
-    await Permission.photos.request();
-    var permissionStatus = await Permission.photos.status;
-    if (permissionStatus.isGranted) {
-      //select image
-      image = await _picker.getImage(source: ImageSource.gallery);
-      var file = File(image.path);
-      if (image != null) {
-        //upload to firebase
-        var snapshot =
-            await _storage.ref().child('folderName/imageName').putFile(file);
-        var downloadURL = await snapshot.ref.getDownloadURL();
-        setState(() {
-          imageURL = downloadURL;
-        });
-      } else {
-        print('no path received');
-      }
-    } else {
-      print('grant permissions and try again');
-    }
-  }
+  uploadImage() async {}
 }
