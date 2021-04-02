@@ -1,8 +1,14 @@
 class MyImages {
-  String image;
-  String uid;
+  final String image;
+  final String uid;
   MyImages({
     this.image,
     this.uid,
   });
+  Map<String, dynamic> toMap() {
+    return {
+      'uid': uid,
+      'image': image,
+    };
+  }
 }
