@@ -3,8 +3,8 @@ class MyCompanyInfo{
   final String uid;
   final String name;
   MyCompanyInfo({
-    this.location,
     this.uid,
+    this.location,
     this.name
   });
   Map<String, dynamic> toMap() {

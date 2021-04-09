@@ -27,13 +27,16 @@ class CompanyInfoProvider with ChangeNotifier {
     notifyListeners();
   }
   toSave() {
+    print('e');
     if(_uid==null){
     var newProduct = MyCompanyInfo(uid: uid, location: location, name: name);
     ciService.infoCompAdd(newProduct);
+    print('da');
     }
   else{
     var newProduct = MyCompanyInfo(uid: _uid, location: _location, name: _name);
     ciService.infoCompAdd(newProduct);
+    print('nu');
   }
   }
   loadValues(MyCompanyInfo companyInfo){
@@ -41,4 +44,5 @@ class CompanyInfoProvider with ChangeNotifier {
      _uid=companyInfo.uid;
      _location=companyInfo.location;
    }
+  
 }

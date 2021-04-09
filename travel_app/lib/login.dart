@@ -3,6 +3,7 @@ import 'package:travel_app/TextFieldWidget.dart';
 import 'package:travel_app/buttonWidget.dart';
 import 'package:travel_app/clientHomepage.dart';
 import 'package:travel_app/companyAdd.dart';
+import 'package:travel_app/companyHomepage.dart';
 import 'package:travel_app/signUp.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -80,7 +81,7 @@ class _MyLoginState extends State<MyLogin> {
                                   builder: (context) => MyClientHomepage()));
                             } else {
                               Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => MyCompanyAdd()));
+                                  builder: (context) => MyCompanyHome()));
                             }
                           }
                         });

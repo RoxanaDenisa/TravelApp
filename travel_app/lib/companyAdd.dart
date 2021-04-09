@@ -230,13 +230,34 @@ class _MyCompanyAddState extends State<MyCompanyAdd> {
                             ),
                              Text('\nComplete Name:',textAlign: TextAlign.left,style: TextStyle(fontSize: 15,color: Colors.green[600],fontWeight: FontWeight.bold),),
                             TextField(
+                              controller: nameController,
                               selectionHeightStyle : ui.BoxHeightStyle.tight,
                                onChanged: (value){
-                                   
+                                   companyInfoProvider.setName(value);
                                },
                                decoration: InputDecoration(border: UnderlineInputBorder(borderSide: BorderSide(color: Colors.green[800]),)),
                             ),
-                            Text('\n'),
+                            Text('\n',style: TextStyle(fontSize: 5),),
+                            Container(
+                              padding: EdgeInsets.only(right:10,left:(MediaQuery.of(context).size.width*1/2)),
+                              width:40,
+                              height:20,
+                              child: MaterialButton(   
+                              height:20,
+                                onPressed: (){
+                                  print('p1');
+                                  companyInfoProvider.setUID(FirebaseAuth.instance.currentUser.uid.toString());
+                                  companyInfoProvider.toSave();
+                                },
+                                child: Text(
+                                 'Upgrade',
+                                 style: TextStyle(fontSize: 10.0, color: Colors.white),
+                                 ),
+                                color: Colors.green[700],
+                                ),
+                                
+                                ),
+                             Text('\n'),
                             Container(
                               decoration: BoxDecoration(
                               color: Colors.brown[50],

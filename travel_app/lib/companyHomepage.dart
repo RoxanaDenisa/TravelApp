@@ -26,6 +26,9 @@ class MyCompanyHome extends StatefulWidget {
 class _MyCompanyHomeState extends State<MyCompanyHome> {
   @override
   Widget build(BuildContext context) {
+    final ciProvider = Provider.of<CompanyInfoProvider>(context);
+    final ci=Provider.of<List<MyCompanyInfo>>(context);
+    final currentInfo=select(ci,FirebaseAuth.instance.currentUser.uid.toString());
     return new Scaffold(
         appBar: AppBar(
             toolbarHeight: 60,
@@ -54,8 +57,12 @@ class _MyCompanyHomeState extends State<MyCompanyHome> {
               TextButton(
                   
                   onPressed: () {
+                    if(currentInfo==null)
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => MyCompanyAdd()));
+                    else
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => MyCompanyAdd(currentInfo)));
                   },
                   child: Text(
                     'Customize',
@@ -85,6 +92,15 @@ class _MyCompanyHomeState extends State<MyCompanyHome> {
         );
         })
         );}
-    
+       MyCompanyInfo select(List<MyCompanyInfo> imgs,String u){
+         
+          if((imgs!=null))
+          for(int i=0;i<imgs.length;i++)
+          if(imgs[i].uid==u)
+          {
+              return imgs[i];
+          }
+          return null;
+        }
   }
 
