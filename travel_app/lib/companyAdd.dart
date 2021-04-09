@@ -1,3 +1,9 @@
+import 'package:travel_app/buttonWidget.dart';
+import 'package:travel_app/companyHomepage.dart';
+import 'package:travel_app/objects/companyInfo.dart';
+import 'package:travel_app/providers/companyInfo_provider.dart';
+import 'package:travel_app/providers/rooms_provider.dart';
+import 'package:travel_app/textFieldWidget.dart';
 import 'package:uuid/uuid.dart';
 import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -7,22 +13,57 @@ import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:travel_app/objects/images.dart';
 import 'package:travel_app/reservation.dart';
-import 'package:travel_app/services/imageService.dart';
 import 'package:provider/provider.dart';
 import 'package:travel_app/providers/images_provider.dart';
-//import 'package:path/path.dart'
+import 'dart:ui' as ui;
 
 class MyCompanyAdd extends StatefulWidget {
+   final MyCompanyInfo companyInfo;
+  MyCompanyAdd([this.companyInfo]);
   @override
   _MyCompanyAddState createState() => new _MyCompanyAddState();
 }
 
 class _MyCompanyAddState extends State<MyCompanyAdd> {
-  String _email, _password;
   String imageURL;
+  final nameController= TextEditingController();
+  final locationController=TextEditingController();
+  @override
+  void dispose()
+  {
+    nameController.dispose();
+    locationController.dispose();
+    super.dispose();
+  }
+  @override
+  void initState(){
+    if(widget.companyInfo==null){
+      nameController.text="";
+      locationController.text="";
+       new Future.delayed(Duration.zero,(){
+            final companyInfoProvider=Provider.of<CompanyInfoProvider>(context,listen: false);
+            companyInfoProvider.loadValues(MyCompanyInfo());
+      });
+    }
+    else {
+      
+      nameController.text=widget.companyInfo.name;
+      locationController.text=widget.companyInfo.location;
+
+      new Future.delayed(Duration.zero,(){
+            final medicineProvider=Provider.of<CompanyInfoProvider>(context,listen: false);
+            medicineProvider.loadValues(widget.companyInfo);
+      });
+    }
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     final imageProvider = Provider.of<ImagesProvider>(context);
+    final roomsProvider = Provider.of<RoomsProvider>(context);
+    final companyInfoProvider=Provider.of<CompanyInfoProvider>(context);
+    final imgs=Provider.of<List<MyImages>>(context);
+    final img=select(imgs,FirebaseAuth.instance.currentUser.uid.toString());
     return new Scaffold(
         appBar: AppBar(
             toolbarHeight: 60,
@@ -38,29 +79,36 @@ class _MyCompanyAddState extends State<MyCompanyAdd> {
                 padding: EdgeInsets.only(right: 10),
               ),
               TextButton(
-                  onPressed: () {},
-                  style:
-                      TextButton.styleFrom(backgroundColor: Colors.orange[800]),
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => MyCompanyHome()));
+                  },
+                  
                   child: Text(
                     'Home',
                     style: TextStyle(color: Colors.white),
                   )),
               TextButton(
+                   style:
+                      TextButton.styleFrom(backgroundColor: Colors.orange[800]),
                   onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => MyReservations()));
+                    
                   },
                   child: Text(
                     'Customize',
                     style: TextStyle(color: Colors.white),
                   )),
             ]),
-        body: Column(children: <Widget>[
+     body: (img!=null&&imgs!=null) ?ListView.builder(
+        itemCount:1,
+        itemBuilder: (context,index){
+        return Column(children: <Widget>[
           AppBar(
             toolbarHeight: 40,
+            automaticallyImplyLeading: false,
             backgroundColor: Colors.grey[350],
             title: Row(children: <Widget>[
-              Text("App",
+              Text("       App",
                   style: TextStyle(
                       color: Colors.green[800],
                       fontSize: 40.0,
@@ -69,19 +117,19 @@ class _MyCompanyAddState extends State<MyCompanyAdd> {
             ]),
           ),
           Container(
-              height: 170,
+              height: (MediaQuery.of(context).size.height * 2/3),
               child: ListView(
                   padding: EdgeInsets.only(right: 30, left: 30),
                   scrollDirection: Axis.vertical,
                   children: <Widget>[
-                    Text('\n\n'),
+                    Text('\n',style: TextStyle(fontSize: 7),),
                     Container(
                         decoration: BoxDecoration(
                             color: Colors.brown[50],
                             border: Border.all(
                               color: Colors.deepOrange[600],
                             )),
-                        height: 200,
+                        height: 250,
                         //width: (MediaQuery.of(context).size.width - 100),
                         padding: EdgeInsets.only(left: 30, right: 30),
                         child: ListView(
@@ -92,7 +140,7 @@ class _MyCompanyAddState extends State<MyCompanyAdd> {
                                   decoration: BoxDecoration(
                                     color: Colors.brown[50],
                                   ),
-                                  height: 150,
+                                  height: 200,
                                   child: Row(children: <Widget>[
                                     IconButton(
                                         onPressed: () async {
@@ -108,11 +156,11 @@ class _MyCompanyAddState extends State<MyCompanyAdd> {
                                             //select image
                                             image = await _picker.getImage(
                                                 source: ImageSource.gallery);
-                                            var file = File(image.path);
+                                            
                                             if (image != null) {
                                               //upload to firebase
                                               String uuid = Uuid().v1();
-
+                                              var file = File(image.path);
                                               var snapshot = await _storage
                                                   .ref()
                                                   .child('images')
@@ -128,6 +176,9 @@ class _MyCompanyAddState extends State<MyCompanyAdd> {
                                               imageProvider.setImage(imageURL);
                                               imageProvider.setUID(FirebaseAuth
                                                   .instance.currentUser.uid);
+                                              
+                                              String uuuid = Uuid().v1();
+                                              imageProvider.setProdId(uuuid);
                                               imageProvider.toSave();
                                               print(imageURL);
                                             } else {
@@ -143,11 +194,144 @@ class _MyCompanyAddState extends State<MyCompanyAdd> {
                                           size: 40,
                                           color: Colors.deepOrange[600],
                                         )),
+                                         Text('           '),
+                                         
+                                             Row(
+                                              children: List<Row>.generate(
+                                                img.length, 
+                                                (index) => Row(children: [
+                                                  Image.network(img[index].image,height: 180),
+                                                  Column(
+                                                    children: [
+                                                      
+                                                      IconButton(icon: Icon(Icons.cancel_outlined,size: 40, color: Colors.red ,), onPressed: (){
+                                                             imageProvider.deleteImage(img[index]);
+                                                     Navigator.of(context)
+                                                      .push(
+                                                        MaterialPageRoute(
+                                                          builder: (context)=>MyCompanyAdd()
+                                                        ));
+                                                      })
+                                                    ],
+                                                  ),
+                                                  Text('       ')
+                                                ],
+                                                )))
                                   ]))
-                            ]))
+                            ])),
+                            Text('\nLocation:',textAlign: TextAlign.left,style: TextStyle(fontSize: 15,color: Colors.green[600],fontWeight: FontWeight.bold),),
+                            TextField(
+                              selectionHeightStyle : ui.BoxHeightStyle.tight,
+                              controller: locationController,
+                               onChanged: (value){
+                                   companyInfoProvider.setLocation(value);
+                               },
+                               decoration: InputDecoration(border: UnderlineInputBorder(borderSide: BorderSide(color: Colors.green[800]),)),
+                            ),
+                             Text('\nComplete Name:',textAlign: TextAlign.left,style: TextStyle(fontSize: 15,color: Colors.green[600],fontWeight: FontWeight.bold),),
+                            TextField(
+                              controller: nameController,
+                              selectionHeightStyle : ui.BoxHeightStyle.tight,
+                               onChanged: (value){
+                                   companyInfoProvider.setName(value);
+                               },
+                               decoration: InputDecoration(border: UnderlineInputBorder(borderSide: BorderSide(color: Colors.green[800]),)),
+                            ),
+                            Text('\n',style: TextStyle(fontSize: 5),),
+                            Container(
+                              padding: EdgeInsets.only(right:10,left:(MediaQuery.of(context).size.width*1/2)),
+                              width:40,
+                              height:20,
+                              child: MaterialButton(   
+                              height:20,
+                                onPressed: (){
+                                  print('p1');
+                                  companyInfoProvider.setUID(FirebaseAuth.instance.currentUser.uid.toString());
+                                  companyInfoProvider.toSave();
+                                },
+                                child: Text(
+                                 'Upgrade',
+                                 style: TextStyle(fontSize: 10.0, color: Colors.white),
+                                 ),
+                                color: Colors.green[700],
+                                ),
+                                
+                                ),
+                             Text('\n'),
+                            Container(
+                              decoration: BoxDecoration(
+                              color: Colors.brown[50],
+                              border: Border.all(
+                              color: Colors.deepOrange[600],
+                              )),
+                              height: 350,
+                              width: 270,
+                              child:Padding(
+                              padding: EdgeInsets.only(left: 25,right: 25),
+                              child:Column(
+                                children: <Widget>[
+                                     
+                                      Text('\nRoom Type',textAlign: TextAlign.left,style: TextStyle(fontWeight: FontWeight.bold,color: Colors.green[700],fontSize: 20),),
+                                      TextFieldWidget(
+                                           obscureText: false,
+                                           hintText: '',
+                                           lines: 1,
+                                           onChanged: (value){
+                                             roomsProvider.setType(value);
+                                    },),
+                                    Text('Price/night',textAlign: TextAlign.left,style: TextStyle(fontWeight: FontWeight.bold,color: Colors.green[700],fontSize: 20),),
+                                    TextFieldWidget(
+                                           lines:1,
+                                           obscureText: false,
+                                           hintText: '',
+                                           onChanged: (value){
+                                             roomsProvider.setPrice(value);
+                                    },
+                                    ),
+                                    Text('Benefits',textAlign: TextAlign.left,style: TextStyle(fontWeight: FontWeight.bold,color: Colors.green[700],fontSize: 20),),
+                                    TextFieldWidget(
+                                           lines: 3,
+                                           obscureText: false,
+                                           hintText: '',
+                                           onChanged: (value){
+                                             roomsProvider.setBenefits(value);
+                                    },
+                                    ),
+                                    Text('\n',style: TextStyle(fontSize: 8),),
+                                    Padding(
+                                     padding: EdgeInsets.only(left: 30,right: 30),
+                                     child:ButtonWidget(
+                                       onPressed: (){
+                                         roomsProvider.setUID(FirebaseAuth
+                                                  .instance.currentUser.uid);
+                                         roomsProvider.toSave();
+                                         Navigator.of(context).push(
+                                         MaterialPageRoute(builder: (context) => MyCompanyAdd()));
+                                       },
+                                       title: 'Save',
+                                     )
+                                    )
+                                  ],
+                                  ))
+                              )
                   ]))
-        ]));
+        ]
+        );
+        }): Center(child: CircularProgressIndicator())
+        );}
+        List<MyImages> select(List<MyImages> imgs,String u){
+          
+          List<MyImages> l=[];
+          if((imgs!=null))
+          for(int i=0;i<imgs.length;i++)
+          if(imgs[i].uid==u)
+          {
+              l.add(imgs[i]);
+          }
+          int x=l.length;
+          print("$x din provider");
+          return l;
+        }
+    
   }
 
-  uploadImage() async {}
-}

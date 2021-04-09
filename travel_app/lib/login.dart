@@ -3,6 +3,7 @@ import 'package:travel_app/TextFieldWidget.dart';
 import 'package:travel_app/buttonWidget.dart';
 import 'package:travel_app/clientHomepage.dart';
 import 'package:travel_app/companyAdd.dart';
+import 'package:travel_app/companyHomepage.dart';
 import 'package:travel_app/signUp.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -35,6 +36,7 @@ class _MyLoginState extends State<MyLogin> {
             },
             hintText: 'Email',
             obscureText: false,
+            lines: 1,
             prefixIconData: Icons.person,
           ),
           Text('\n', style: TextStyle(fontSize: 4)),
@@ -46,6 +48,7 @@ class _MyLoginState extends State<MyLogin> {
             },
             hintText: 'Password',
             obscureText: true,
+            lines: 1,
             prefixIconData: Icons.vpn_key,
           ),
           Text('\n', style: TextStyle(fontSize: 10)),
@@ -56,8 +59,12 @@ class _MyLoginState extends State<MyLogin> {
                 children: <Widget>[
                   ButtonWidget(
                       onPressed: () async {
+                        try{
+                          User user=(
                         await FirebaseAuth.instance.signInWithEmailAndPassword(
-                            email: _email, password: _password);
+                            email: _email, password: _password)).user;
+                            if(user!=null)
+                            {
                         FirebaseAuth auth = FirebaseAuth.instance;
                         String uid = auth.currentUser.uid.toString();
 
@@ -74,10 +81,15 @@ class _MyLoginState extends State<MyLogin> {
                                   builder: (context) => MyClientHomepage()));
                             } else {
                               Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => MyCompanyAdd()));
+                                  builder: (context) => MyCompanyHome()));
                             }
                           }
                         });
+                            }} catch (e){
+                                print(e);
+                                _email="";
+                                _password="";
+                            }
                       },
                       title: 'Login')
                 ],

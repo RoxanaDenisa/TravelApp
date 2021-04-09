@@ -5,6 +5,7 @@ import 'package:travel_app/buttonWidget.dart';
 import 'package:travel_app/login.dart';
 import 'package:travel_app/authenticationService.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 class MySignUp extends StatefulWidget {
   @override
@@ -43,6 +44,7 @@ class _MySignUp extends State<MySignUp> {
             TextFieldWidget(
               hintText: 'Name',
               obscureText: false,
+              lines: 1,
               prefixIconData: Icons.verified_user,
               onChanged: (value) {
                 setState(() => name = value);
@@ -51,6 +53,7 @@ class _MySignUp extends State<MySignUp> {
             Text('\n', style: TextStyle(fontSize: 2)),
             TextFieldWidget(
               hintText: 'Username',
+              lines: 1,
               obscureText: false,
               prefixIconData: Icons.person,
               onChanged: (value) {
@@ -59,6 +62,7 @@ class _MySignUp extends State<MySignUp> {
             ),
             Text('\n', style: TextStyle(fontSize: 2)),
             TextFieldWidget(
+              lines: 1,
               hintText: 'Password',
               obscureText: true,
               prefixIconData: Icons.vpn_key,
@@ -68,6 +72,7 @@ class _MySignUp extends State<MySignUp> {
             ),
             Text('\n', style: TextStyle(fontSize: 2)),
             TextFieldWidget(
+              lines: 1,
               hintText: 'Phone Number',
               obscureText: false,
               prefixIconData: Icons.phone,
@@ -77,6 +82,7 @@ class _MySignUp extends State<MySignUp> {
             ),
             Text('\n', style: TextStyle(fontSize: 2)),
             TextFieldWidget(
+              lines: 1,
               hintText: 'Email',
               obscureText: false,
               prefixIconData: Icons.email,
