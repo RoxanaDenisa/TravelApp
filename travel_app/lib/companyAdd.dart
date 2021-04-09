@@ -1,6 +1,7 @@
 import 'package:travel_app/buttonWidget.dart';
 import 'package:travel_app/companyHomepage.dart';
 import 'package:travel_app/objects/companyInfo.dart';
+import 'package:travel_app/objects/rooms.dart';
 import 'package:travel_app/providers/companyInfo_provider.dart';
 import 'package:travel_app/providers/rooms_provider.dart';
 import 'package:travel_app/textFieldWidget.dart';
@@ -12,7 +13,6 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:travel_app/objects/images.dart';
-import 'package:travel_app/reservation.dart';
 import 'package:provider/provider.dart';
 import 'package:travel_app/providers/images_provider.dart';
 import 'dart:ui' as ui;
@@ -61,6 +61,7 @@ class _MyCompanyAddState extends State<MyCompanyAdd> {
   Widget build(BuildContext context) {
     final imageProvider = Provider.of<ImagesProvider>(context);
     final roomsProvider = Provider.of<RoomsProvider>(context);
+    final room=Provider.of<List<MyRooms>>(context);
     final companyInfoProvider=Provider.of<CompanyInfoProvider>(context);
     final imgs=Provider.of<List<MyImages>>(context);
     final img=select(imgs,FirebaseAuth.instance.currentUser.uid.toString());
@@ -99,7 +100,7 @@ class _MyCompanyAddState extends State<MyCompanyAdd> {
                     style: TextStyle(color: Colors.white),
                   )),
             ]),
-     body: (img!=null&&imgs!=null) ?ListView.builder(
+     body: (img!=null&&imgs!=null&&room!=null) ?ListView.builder(
         itemCount:1,
         itemBuilder: (context,index){
         return Column(children: <Widget>[
@@ -310,10 +311,49 @@ class _MyCompanyAddState extends State<MyCompanyAdd> {
                                        },
                                        title: 'Save',
                                      )
-                                    )
+                                    ),
                                   ],
                                   ))
-                              )
+                              ),
+                             Column(
+                                              children: List<Column>.generate(
+                                                room.length, 
+                                                (index) => Column(children: [
+                                                  Text('\n'),
+                                                  Container(
+                                                    decoration: BoxDecoration(
+                                                    color: Colors.brown[50],
+                                                    border: Border.all(
+                                                    color: Colors.deepOrange[600],
+                                                    )),
+                                                    height: 230,
+                                                    width: 270,
+                                                    child:Column(
+                                                      children: <Widget>[
+                                                            Align(
+                                                              alignment: Alignment.topRight,
+                                                              child:IconButton(
+                                                              icon:Icon(Icons.cancel,size: 25,color: Colors.deepOrange[600],), 
+                                                            onPressed: (){
+
+                                                            }),),
+                                                            Padding(
+                                                    padding: EdgeInsets.only(left: 25,right: 25),
+                                                    child:Column(children: [
+                                                            Text('Room Type',textAlign: TextAlign.left,style: TextStyle(fontWeight: FontWeight.bold,color: Colors.green[700],fontSize: 20),),
+                                                            Text(room[index].type),
+                                                          Text('Price/night',textAlign: TextAlign.left,style: TextStyle(fontWeight: FontWeight.bold,color: Colors.green[700],fontSize: 20),),
+                                                          Text(room[index].price),
+                                                          Text('Benefits',textAlign: TextAlign.left,style: TextStyle(fontWeight: FontWeight.bold,color: Colors.green[700],fontSize: 20),),
+                                                         Container(height:40,child:Text(room[index].benefits)),
+                                                          Text('\n',style: TextStyle(fontSize: 8),),
+                                                          
+                                                        ],)
+                                                        )]))
+                                                      ,
+                                                  Text('       ')
+                                                ],
+                                                )))
                   ]))
         ]
         );
@@ -327,6 +367,19 @@ class _MyCompanyAddState extends State<MyCompanyAdd> {
           if(imgs[i].uid==u)
           {
               l.add(imgs[i]);
+          }
+          int x=l.length;
+          print("$x din provider");
+          return l;
+        }
+        List<MyRooms> select2(List<MyRooms> room,String u){
+          
+          List<MyRooms> l=[];
+          if((room!=null))
+          for(int i=0;i<room.length;i++)
+          if(room[i].uid==u)
+          {
+              l.add(room[i]);
           }
           int x=l.length;
           print("$x din provider");
