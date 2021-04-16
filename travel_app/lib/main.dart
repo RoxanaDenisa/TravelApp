@@ -20,17 +20,17 @@ void main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final imageService=ImageService();
-    final roomService=RoomService();
-    final icService=CompanyInfoService();
+    final imageService = ImageService();
+    final roomService = RoomService();
+    final icService = CompanyInfoService();
     return MultiProvider(
         providers: [
           ChangeNotifierProvider(create: (context) => ImagesProvider()),
-          StreamProvider(create: (context)=>imageService.getImage()),
+          StreamProvider(create: (context) => imageService.getImage()),
           ChangeNotifierProvider(create: (context) => RoomsProvider()),
-          StreamProvider(create: (context)=>roomService.getRoom()),
-          ChangeNotifierProvider(create:(context)=>CompanyInfoProvider()),
-          StreamProvider(create: (context)=>icService.getInfo()),
+          StreamProvider(create: (context) => roomService.getRoom()),
+          ChangeNotifierProvider(create: (context) => CompanyInfoProvider()),
+          StreamProvider(create: (context) => icService.getInfo()),
         ],
         child: MaterialApp(
           debugShowCheckedModeBanner: false,

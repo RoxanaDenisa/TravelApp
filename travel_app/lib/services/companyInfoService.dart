@@ -5,15 +5,19 @@ import 'package:travel_app/objects/companyInfo.dart';
 import 'package:travel_app/objects/images.dart';
 import 'package:path/path.dart' as Path;
 
-class CompanyInfoService{
+class CompanyInfoService {
   FirebaseFirestore _db = FirebaseFirestore.instance;
-  Future<void> infoCompAdd (MyCompanyInfo myCompanyInfo) {
-    return _db.collection('dbCompanyInfo').doc(myCompanyInfo.uid).set(myCompanyInfo.toMap());
+  Future<void> infoCompAdd(MyCompanyInfo myCompanyInfo) {
+    return _db
+        .collection('dbCompanyInfo')
+        .doc(myCompanyInfo.uid)
+        .set(myCompanyInfo.toMap());
   }
-  Stream<List<MyCompanyInfo>>getInfo(){
-    return _db.collection('dbCompanyInfo').snapshots().map((snapshot) => snapshot.docs.map((document)=>MyCompanyInfo.fromFirestore(document.data())).toList());
+
+  Stream<List<MyCompanyInfo>> getInfo() {
+    return _db.collection('dbCompanyInfo').snapshots().map((snapshot) =>
+        snapshot.docs
+            .map((document) => MyCompanyInfo.fromFirestore(document.data()))
+            .toList());
   }
-  
-  
-  
 }
