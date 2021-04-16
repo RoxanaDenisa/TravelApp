@@ -1,7 +1,11 @@
+//import 'dart:html';
 import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:travel_app/objects/images.dart';
 import 'package:travel_app/providers/companyInfo_provider.dart';
 import 'package:travel_app/reservation.dart';
 import 'package:travel_app/services/searchService.dart';
@@ -61,6 +65,8 @@ class _MyClientHomepage extends State<MyClientHomepage> {
 
   @override
   Widget build(BuildContext context) {
+    final imgs = Provider.of<List<MyImages>>(context);
+    final img = select(imgs, FirebaseAuth.instance.currentUser.uid.toString());
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
@@ -135,6 +141,12 @@ class _MyClientHomepage extends State<MyClientHomepage> {
                                       BorderSide(color: Colors.green[800]),
                                 ))))),
               ]),
+          Text(
+            '\n',
+            style: TextStyle(
+              fontSize: 10,
+            ),
+          ),
           if (tempSearchStore.length != 0)
             GridView.count(
                 padding: EdgeInsets.only(left: 10.0, right: 10.0),
@@ -144,7 +156,49 @@ class _MyClientHomepage extends State<MyClientHomepage> {
                 primary: false,
                 shrinkWrap: true,
                 children: tempSearchStore.map((element) {
-                  return buildResultCard(element);
+                  return MaterialButton(
+                      minWidth: 100,
+                      height: 100,
+                      color: Colors.grey[200],
+                      onPressed: () {},
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0)),
+                      elevation: 2.0,
+                      child: Center(
+                          child: Container(
+                              height: 100,
+                              width: 100,
+                              child: Column(children: <Widget>[
+                                Text(
+                                  element['name'],
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 15.0,
+                                  ),
+                                ),
+                                Text(
+                                  element['location'],
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 10.0,
+                                  ),
+                                ),
+                                Text('\n',
+                                    style: TextStyle(
+                                      fontSize: 4.0,
+                                    )),
+                                if (select(imgs, element['uid']) != null)
+                                  Image.network(select(imgs, element['uid']),
+                                      height: 50)
+                                else
+                                  Icon(
+                                    Icons.image_not_supported_sharp,
+                                    size: 30,
+                                    color: Colors.black,
+                                  )
+                              ]))));
                 }).toList())
           else
             Column(
@@ -171,7 +225,7 @@ class _MyClientHomepage extends State<MyClientHomepage> {
                                 'Discover the best\noffers and travel\naround the\nworld!',
                                 style: TextStyle(
                                     color: Colors.green[600], fontSize: 18),
-                              )
+                              ),
                             ],
                           ),
                         ),
@@ -196,30 +250,16 @@ class _MyClientHomepage extends State<MyClientHomepage> {
     );
   }
 
-  Widget buildResultCard(data) {
-    return Card(
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-        elevation: 2.0,
-        child: Container(
-            child: Center(
-                child: Column(children: <Widget>[
-          Text(
-            data['location'],
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 20.0,
-            ),
-          ),
-          Text(
-            data['name'],
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 20.0,
-            ),
-          ),
-        ]))));
+  Widget buildResultCard(data) {}
+
+  String select(List<MyImages> imgs, String u) {
+    int i;
+    if (imgs != null) for (i = 0; i < imgs.length && imgs[i].uid != u; i++);
+    print(i);
+
+    if (imgs.length == i)
+      return null;
+    else
+      return imgs[i].image;
   }
 }
