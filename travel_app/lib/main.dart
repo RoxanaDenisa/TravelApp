@@ -4,9 +4,11 @@ import 'package:travel_app/login.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:travel_app/providers/companyInfo_provider.dart';
 import 'package:travel_app/providers/images_provider.dart';
+import 'package:travel_app/providers/reservation_provider.dart';
 import 'package:travel_app/services/companyInfoService.dart';
 import 'package:travel_app/services/imageService.dart';
 import 'package:travel_app/providers/rooms_provider.dart';
+import 'package:travel_app/services/reservationService.dart';
 import 'package:travel_app/services/roomService.dart';
 //import 'package:flutter_auth/Screens/Welcome/components/background.dart';
 //import 'package:flutter_svg/svg.dart';
@@ -23,6 +25,7 @@ class MyApp extends StatelessWidget {
     final imageService = ImageService();
     final roomService = RoomService();
     final icService = CompanyInfoService();
+    final reservationService = ReservationService();
     return MultiProvider(
         providers: [
           ChangeNotifierProvider(create: (context) => ImagesProvider()),
@@ -31,6 +34,9 @@ class MyApp extends StatelessWidget {
           StreamProvider(create: (context) => roomService.getRoom()),
           ChangeNotifierProvider(create: (context) => CompanyInfoProvider()),
           StreamProvider(create: (context) => icService.getInfo()),
+          ChangeNotifierProvider(create: (context) => ReservationProvider()),
+          StreamProvider(
+              create: (context) => reservationService.getReservation()),
         ],
         child: MaterialApp(
           debugShowCheckedModeBanner: false,

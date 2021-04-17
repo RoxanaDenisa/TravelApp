@@ -5,6 +5,7 @@ import 'package:travel_app/objects/rooms.dart';
 import 'package:travel_app/providers/companyInfo_provider.dart';
 import 'package:travel_app/providers/rooms_provider.dart';
 import 'package:travel_app/textFieldWidget.dart';
+import 'package:travel_app/textFieldWidget2.dart';
 import 'package:uuid/uuid.dart';
 import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -60,10 +61,12 @@ class _MyCompanyAddState extends State<MyCompanyAdd> {
 
   @override
   Widget build(BuildContext context) {
+    int p;
     final imageProvider = Provider.of<ImagesProvider>(context);
     final roomsProvider = Provider.of<RoomsProvider>(context);
     final rooms = Provider.of<List<MyRooms>>(context);
-    final room=select2(rooms,FirebaseAuth.instance.currentUser.uid.toString());
+    final room =
+        select2(rooms, FirebaseAuth.instance.currentUser.uid.toString());
     final companyInfoProvider = Provider.of<CompanyInfoProvider>(context);
     final imgs = Provider.of<List<MyImages>>(context);
     final img = select(imgs, FirebaseAuth.instance.currentUser.uid.toString());
@@ -363,12 +366,13 @@ class _MyCompanyAddState extends State<MyCompanyAdd> {
                                                 color: Colors.green[700],
                                                 fontSize: 20),
                                           ),
-                                          TextFieldWidget(
+                                          TextFieldWidget2(
                                             lines: 1,
                                             obscureText: false,
                                             hintText: '',
                                             onChanged: (value) {
-                                              roomsProvider.setPrice(value);
+                                              roomsProvider
+                                                  .setPrice(int.parse(value));
                                             },
                                           ),
                                           Text(
@@ -396,9 +400,12 @@ class _MyCompanyAddState extends State<MyCompanyAdd> {
                                                   left: 30, right: 30),
                                               child: ButtonWidget(
                                                 onPressed: () {
-                                                  roomsProvider.setUID(
+                                                  String u = Uuid().v1();
+                                                  roomsProvider.setUID(u);
+                                                  roomsProvider.setUidHotel(
                                                       FirebaseAuth.instance
-                                                          .currentUser.uid);
+                                                          .currentUser.uid
+                                                          .toString());
                                                   roomsProvider.toSave();
                                                   Navigator.of(context).push(
                                                       MaterialPageRoute(
@@ -477,7 +484,7 @@ class _MyCompanyAddState extends State<MyCompanyAdd> {
                                                                   fontSize: 20),
                                                             ),
                                                             Text(room[index]
-                                                                .price),
+                                                                .getPriceString()),
                                                             Text(
                                                               'Benefits',
                                                               textAlign:
@@ -530,7 +537,7 @@ class _MyCompanyAddState extends State<MyCompanyAdd> {
     List<MyRooms> l = [];
     if ((room != null))
       for (int i = 0; i < room.length; i++)
-        if (room[i].uid == u) {
+        if (room[i].uidHotel == u) {
           l.add(room[i]);
         }
     int x = l.length;
