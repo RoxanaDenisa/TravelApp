@@ -62,7 +62,8 @@ class _MyCompanyAddState extends State<MyCompanyAdd> {
   Widget build(BuildContext context) {
     final imageProvider = Provider.of<ImagesProvider>(context);
     final roomsProvider = Provider.of<RoomsProvider>(context);
-    final room = Provider.of<List<MyRooms>>(context);
+    final rooms = Provider.of<List<MyRooms>>(context);
+    final room=select2(rooms,FirebaseAuth.instance.currentUser.uid.toString());
     final companyInfoProvider = Provider.of<CompanyInfoProvider>(context);
     final imgs = Provider.of<List<MyImages>>(context);
     final img = select(imgs, FirebaseAuth.instance.currentUser.uid.toString());
@@ -133,7 +134,6 @@ class _MyCompanyAddState extends State<MyCompanyAdd> {
                                         color: Colors.deepOrange[600],
                                       )),
                                   height: 250,
-                                  //width: (MediaQuery.of(context).size.width - 100),
                                   padding: EdgeInsets.only(left: 30, right: 30),
                                   child: ListView(
                                       padding:
