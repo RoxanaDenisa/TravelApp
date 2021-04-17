@@ -1,12 +1,10 @@
-//import 'dart:html';
 import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:travel_app/hotelClient.dart';
 import 'package:travel_app/objects/images.dart';
-import 'package:travel_app/providers/companyInfo_provider.dart';
 import 'package:travel_app/reservation.dart';
 import 'package:travel_app/services/searchService.dart';
 
@@ -66,7 +64,6 @@ class _MyClientHomepage extends State<MyClientHomepage> {
   @override
   Widget build(BuildContext context) {
     final imgs = Provider.of<List<MyImages>>(context);
-    final img = select(imgs, FirebaseAuth.instance.currentUser.uid.toString());
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
@@ -160,7 +157,10 @@ class _MyClientHomepage extends State<MyClientHomepage> {
                       minWidth: 100,
                       height: 100,
                       color: Colors.grey[200],
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => MyHotelClient(element['uid'])));
+                      },
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10.0)),
                       elevation: 2.0,
@@ -236,8 +236,6 @@ class _MyClientHomepage extends State<MyClientHomepage> {
                       ])),
                 ),
                 Positioned.fill(
-                    // width: (MediaQuery.of(context).size.width),
-
                     child: Image(
                   image: AssetImage('assets/HomeC.png'),
                   width: (MediaQuery.of(context).size.width),
@@ -250,16 +248,17 @@ class _MyClientHomepage extends State<MyClientHomepage> {
     );
   }
 
-  Widget buildResultCard(data) {}
-
   String select(List<MyImages> imgs, String u) {
     int i;
-    if (imgs != null) for (i = 0; i < imgs.length && imgs[i].uid != u; i++);
+    if (imgs != null) {
+    for (i = 0; i < imgs.length && imgs[i].uid != u; i++);
     print(i);
 
     if (imgs.length == i)
       return null;
     else
       return imgs[i].image;
+  }
+  return null;
   }
 }
