@@ -51,7 +51,7 @@ class CompanyInfoProvider with ChangeNotifier {
           location: location,
           name: name,
           searchKey: searchKey,
-          searchKey2: _searchKey2);
+          searchKey2: searchKey2);
       ciService.infoCompAdd(newProduct);
       print('da');
     } else {

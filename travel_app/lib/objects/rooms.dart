@@ -1,26 +1,29 @@
 class MyRooms {
   final String type;
-  final String price;
+  final int price;
   final String benefits;
+  final String uidHotel;
   final String uid;
-  MyRooms({
-    this.type,
-    this.price,
-    this.benefits,
-    this.uid
-  });
+  MyRooms({this.type, this.price, this.benefits, this.uid, this.uidHotel});
   Map<String, dynamic> toMap() {
     return {
       'type': type,
       'price': price,
       'benefits': benefits,
-      'uid':uid
+      'uid': uid,
+      'uidHotel': uidHotel
     };
   }
-  MyRooms.fromFirestore( Map<String,dynamic> f)
-    :type=f['type'],
-    price=f['price'],
-    benefits=f['benefits'],
-    uid=f['uid'];
-  
+
+  String getPriceString() {
+    int x = this.price;
+    return '$x';
+  }
+
+  MyRooms.fromFirestore(Map<String, dynamic> f)
+      : type = f['type'],
+        price = f['price'],
+        benefits = f['benefits'],
+        uidHotel = f['uidHotel'],
+        uid = f['uid'];
 }
