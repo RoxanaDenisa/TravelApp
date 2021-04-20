@@ -1,6 +1,5 @@
 import 'dart:ui';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:travel_app/clientHomepage.dart';
@@ -8,9 +7,6 @@ import 'package:travel_app/form.dart';
 import 'package:travel_app/objects/companyInfo.dart';
 import 'package:travel_app/objects/images.dart';
 import 'package:travel_app/objects/rooms.dart';
-import 'package:travel_app/providers/companyInfo_provider.dart';
-import 'package:travel_app/providers/images_provider.dart';
-import 'package:travel_app/providers/rooms_provider.dart';
 import 'package:travel_app/reservation.dart';
 
 class MyHotelClient extends StatefulWidget {

@@ -1,10 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:provider/provider.dart';
 import 'package:travel_app/objects/companyInfo.dart';
-import 'package:travel_app/objects/images.dart';
 import 'package:travel_app/services/companyInfoService.dart';
-import 'package:travel_app/services/imageService.dart';
 
 class CompanyInfoProvider with ChangeNotifier {
   String _uid;
@@ -44,7 +40,6 @@ class CompanyInfoProvider with ChangeNotifier {
   }
 
   toSave() {
-    print('e');
     if (_uid == null) {
       var newProduct = MyCompanyInfo(
           uid: uid,
@@ -53,7 +48,7 @@ class CompanyInfoProvider with ChangeNotifier {
           searchKey: searchKey,
           searchKey2: searchKey2);
       ciService.infoCompAdd(newProduct);
-      print('da');
+     
     } else {
       var newProduct = MyCompanyInfo(
           uid: _uid,
@@ -62,7 +57,7 @@ class CompanyInfoProvider with ChangeNotifier {
           searchKey: _searchKey,
           searchKey2: _searchKey2);
       ciService.infoCompAdd(newProduct);
-      print('nu');
+      
     }
   }
 

@@ -12,4 +12,7 @@ class RoomService {
         .map((document) => MyRooms.fromFirestore(document.data()))
         .toList());
   }
+  Future<void>removeRoom(MyRooms rooms){
+    return _db.collection('dbRooms').doc(rooms.uid).delete();
+  }
 }

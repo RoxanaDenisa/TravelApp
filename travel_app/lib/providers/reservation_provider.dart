@@ -61,6 +61,7 @@ class ReservationProvider with ChangeNotifier {
   }
 
   toSave() {
+    if (_uid == null) {
     var newProduct = Reservation(
         uid: uid,
         name: name,
@@ -72,4 +73,20 @@ class ReservationProvider with ChangeNotifier {
         status: status);
     reservationService.reservationAdd(newProduct);
   }
+  else{
+    var newProduct = Reservation(
+        uid: _uid,
+        name: _name,
+        nrPersoane: _nrPersoane,
+        perioada: _perioada,
+        tipCamera: _tipCamera,
+        pret: _pret,
+        nrZile: _nrZile,
+        status: _status);
+    reservationService.reservationAdd(newProduct);
+  }
+  }
+  deleteReservation(Reservation r){
+     reservationService.removeReservation(r);
+   }
 }

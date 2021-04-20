@@ -1,7 +1,12 @@
 import 'dart:ui';
-
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:travel_app/clientHomepage.dart';
+import 'package:travel_app/objects/companyInfo.dart';
+import 'package:travel_app/objects/reservation.dart';
+import 'package:travel_app/objects/rooms.dart';
+import 'package:travel_app/providers/reservation_provider.dart';
 
 class MyReservations extends StatefulWidget {
   @override
@@ -9,8 +14,14 @@ class MyReservations extends StatefulWidget {
 }
 
 class _MyReservations extends State<MyReservations> {
+   
   @override
   Widget build(BuildContext context) {
+    final res= Provider.of<List<Reservation>>(context);
+    //final roomSel = select2(res,FirebaseAuth.instance.currentUser.uid.toString());
+    final ci= Provider.of<List<MyCompanyInfo>>(context);
+    final room= Provider.of<List<MyRooms>>(context);
+    final reservationProvider=Provider.of<ReservationProvider>(context);
     return MaterialApp(
         home: Scaffold(
             appBar: AppBar(
@@ -47,7 +58,8 @@ class _MyReservations extends State<MyReservations> {
                         style: TextStyle(color: Colors.white),
                       )),
                 ]),
-            body: Column(children: <Widget>[
+            body: (res != null && ci != null)
+            ?Column(children: <Widget>[
               AppBar(
                   toolbarHeight: 40,
                   backgroundColor: Colors.grey[350],
@@ -63,31 +75,6 @@ class _MyReservations extends State<MyReservations> {
                     Padding(
                       padding: EdgeInsets.only(right: 13),
                     ),
-                    Container(
-                        width: 200,
-                        height: 10,
-                        child: TextField(
-                            cursorHeight: 25,
-                            selectionHeightStyle: BoxHeightStyle.tight,
-                            decoration: InputDecoration(
-                                hintText: 'Search',
-                                prefixIcon: Icon(
-                                  Icons.search,
-                                  size: 25,
-                                  color: Colors.black,
-                                ),
-                                filled: true,
-                                fillColor: Colors.grey[300],
-                                enabledBorder: UnderlineInputBorder(
-                                  borderRadius: BorderRadius.circular(40),
-                                  borderSide:
-                                      BorderSide(color: Colors.green[800]),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(40),
-                                  borderSide:
-                                      BorderSide(color: Colors.green[800]),
-                                ))))
                   ]),
               Center(
                   child: Container(
@@ -95,12 +82,7 @@ class _MyReservations extends State<MyReservations> {
                       height: 40,
                       child: Center(
                           child: Row(children: <Widget>[
-                        Icon(Icons.add_circle,
-                            size: 12, color: Colors.lightGreenAccent[400]),
-                        Text(
-                          '- add a photo with payment          \n earnest confirmation',
-                          style: TextStyle(fontSize: 10),
-                        ),
+                        
                         Icon(Icons.cancel, size: 12, color: Colors.red),
                         Text(
                           '- cancel the reservation',
@@ -108,7 +90,7 @@ class _MyReservations extends State<MyReservations> {
                         )
                       ])))),
               Container(
-                  width: 300,
+                  width: (MediaQuery.of(context).size.width * 9/ 10),
                   height: (MediaQuery.of(context).size.height * 2 / 3),
                   child: ListView(
                       scrollDirection: Axis.vertical,
@@ -134,25 +116,74 @@ class _MyReservations extends State<MyReservations> {
                                           label: Text('Hotel name'),
                                           numeric: false),
                                       DataColumn(
-                                          label: Text('Date'), numeric: false),
+                                          label: Text('Check In Date'), numeric: false),
                                       DataColumn(
                                           label: Text('Price'), numeric: false),
                                       DataColumn(
-                                          label: Text('Status'),
+                                          label: Text('    Status'),
                                           numeric: false),
                                     ],
-                                    rows: <DataRow>[
-                                      DataRow(cells: <DataCell>[
-                                        DataCell(Text('Hilton Hotel London')),
-                                        DataCell(
-                                            Text('20.05.2020 - 25.05.2020   ')),
-                                        DataCell(Text('500')),
-                                        DataCell(Text('Passed')),
-                                      ])
-                                    ],
-                                  )
+                                     rows: List<DataRow>.generate(
+                                                res.length,
+                                                (index) =>
+                                                    DataRow(cells: <DataCell>[
+                                                      DataCell(Container(
+                                                          width: 80,
+                                                          child: Text(getHotelName(room,ci,res[index].tipCamera))
+                                                          )),
+                                                      DataCell(Container(
+                                                          width: 80,
+                                                          child: Text(res[index].perioada))),
+                                                      DataCell(Container(
+                                                          width: 70,
+                                                          child: Text(res[index].getPriceString()+' euro'))),
+                                                      DataCell(Container(
+                                                          child: Column(
+                                                            children:[
+                                                              Text(res[index].status),
+                                                              (res[index].status=='In progress')
+                                                              ?Container(
+                                                                height: 30,
+                                                                child:Row(
+                                                                 children:[
+                                                                   IconButton(
+                                                                     icon: Icon(Icons.cancel,color: Colors.red,size: 20,),
+                                                                     onPressed: (){
+                                                                       reservationProvider.deleteReservation(res[index]);
+                                                                       Navigator.of(context).push(MaterialPageRoute(
+                                                                            builder: (context) =>
+                                                                                MyReservations()));
+                                                                     },),
+                                                                 ]
+                                                              ))
+                                                              :Container(width: 0,height:0)
+                                                          ])))
+                                                    ]))),
                                 ]))
                       ]))
-            ])));
+            ]):Center(child: CircularProgressIndicator())));
+  }
+  List<Reservation> select2(List<Reservation> room, String u) {
+    List<Reservation> l = [];
+    if ((room != null))
+      for (int i = 0; i < room.length; i++)
+        if (room[i].uid == u) {
+          l.add(room[i]);
+        }
+    return l;
+  }
+  String getHotelName(List<MyRooms>room,List<MyCompanyInfo> hotel,String u){
+    if(hotel!=null&&room!=null)
+     {
+       int i;
+       for(i=0;i<room.length&&(room[i].uid!=u);i++);
+       if(i!=room.length)
+        {  for(int j=0;j<hotel.length;j++)
+            if(room[i].uidHotel==hotel[j].uid)
+               return hotel[j].name+' '+hotel[j].location;
+       }
+      return 'The room was removed';
+     }
+    return 'The room was removed';
   }
 }
