@@ -100,8 +100,9 @@ class _MyClientHomepage extends State<MyClientHomepage> {
         body: ListView(scrollDirection: Axis.vertical, children: <Widget>[
           AppBar(
               toolbarHeight: 45,
+              automaticallyImplyLeading: false,
               backgroundColor: Colors.grey[350],
-              title: Text("App",
+              title: Text("      App",
                   style: TextStyle(
                       color: Colors.green[800],
                       fontSize: 38.0,
@@ -252,7 +253,6 @@ class _MyClientHomepage extends State<MyClientHomepage> {
     int i;
     if (imgs != null) {
     for (i = 0; i < imgs.length && imgs[i].uid != u; i++);
-    print(i);
 
     if (imgs.length == i)
       return null;

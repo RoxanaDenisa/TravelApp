@@ -16,4 +16,7 @@ class ReservationService {
             .map((document) => Reservation.fromFirestore(document.data()))
             .toList());
   }
+  Future<void>removeReservation(Reservation r){
+   return _db.collection('dbReservation').doc(r.uid).delete();
+}
 }

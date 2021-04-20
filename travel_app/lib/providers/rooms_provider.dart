@@ -48,4 +48,7 @@ class RoomsProvider with ChangeNotifier {
         uidHotel: _uidHotel);
     roomService.roomAdd(newProduct);
   }
+    deleteRoom(MyRooms room){
+     roomService.removeRoom(room);
+   }
 }

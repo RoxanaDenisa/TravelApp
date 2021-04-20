@@ -28,7 +28,15 @@ class Reservation {
       'status': status,
     };
   }
-
+  
+  String getPriceString() {
+    int x = this.pret;
+    return '$x';
+  }
+String getDaysString() {
+    int x = this.nrZile;
+    return '$x';
+  }
   Reservation.fromFirestore(Map<String, dynamic> f)
       : uid = f['uid'],
         name = f['name'],

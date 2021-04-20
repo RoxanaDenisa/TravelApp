@@ -61,7 +61,6 @@ class _MyCompanyAddState extends State<MyCompanyAdd> {
 
   @override
   Widget build(BuildContext context) {
-    int p;
     final imageProvider = Provider.of<ImagesProvider>(context);
     final roomsProvider = Provider.of<RoomsProvider>(context);
     final rooms = Provider.of<List<MyRooms>>(context);
@@ -158,26 +157,19 @@ class _MyCompanyAddState extends State<MyCompanyAdd> {
                                                             .instance;
                                                     PickedFile image;
                                                     //check permission
-                                                    await Permission.photos
-                                                        .request();
+                                                    await Permission.photos.request();
                                                     var permissionStatus =
                                                         await Permission
                                                             .photos.status;
                                                     if (permissionStatus
                                                         .isGranted) {
                                                       //select image
-                                                      image = await _picker
-                                                          .getImage(
-                                                              source:
-                                                                  ImageSource
-                                                                      .gallery);
+                                                      image = await _picker.getImage(source: ImageSource.gallery);
 
                                                       if (image != null) {
                                                         //upload to firebase
-                                                        String uuid =
-                                                            Uuid().v1();
-                                                        var file =
-                                                            File(image.path);
+                                                        String uuid = Uuid().v1();
+                                                        var file =File(image.path);
                                                         var snapshot =
                                                             await _storage
                                                                 .ref()
@@ -185,12 +177,10 @@ class _MyCompanyAddState extends State<MyCompanyAdd> {
                                                                 .child(uuid)
                                                                 .putFile(file);
                                                         var downloadURL =
-                                                            await snapshot.ref
-                                                                .getDownloadURL();
+                                                            await snapshot.ref.getDownloadURL();
                                                         //print(downloadURL);
                                                         setState(() {
-                                                          imageURL =
-                                                              downloadURL;
+                                                          imageURL =downloadURL;
                                                         });
                                                         imageProvider
                                                             .setImage(imageURL);
@@ -249,7 +239,7 @@ class _MyCompanyAddState extends State<MyCompanyAdd> {
                                                                             .deleteImage(img[index]);
                                                                         Navigator.of(context).push(MaterialPageRoute(
                                                                             builder: (context) =>
-                                                                                MyCompanyAdd()));
+                                                                                MyCompanyAdd(widget.companyInfo)));
                                                                       })
                                                                 ],
                                                               ),
@@ -307,9 +297,7 @@ class _MyCompanyAddState extends State<MyCompanyAdd> {
                               Container(
                                 padding: EdgeInsets.only(
                                     right: 10,
-                                    left: (MediaQuery.of(context).size.width *
-                                        1 /
-                                        2)),
+                                    left: (MediaQuery.of(context).size.width * 1 /2)),
                                 width: 40,
                                 height: 20,
                                 child: MaterialButton(
@@ -410,7 +398,7 @@ class _MyCompanyAddState extends State<MyCompanyAdd> {
                                                   Navigator.of(context).push(
                                                       MaterialPageRoute(
                                                           builder: (context) =>
-                                                              MyCompanyAdd()));
+                                                              MyCompanyAdd(widget.companyInfo)));
                                                 },
                                                 title: 'Save',
                                               )),
@@ -426,13 +414,11 @@ class _MyCompanyAddState extends State<MyCompanyAdd> {
                                                   decoration: BoxDecoration(
                                                       color: Colors.brown[50],
                                                       border: Border.all(
-                                                        color: Colors
-                                                            .deepOrange[600],
+                                                        color: Colors.deepOrange[600],
                                                       )),
                                                   height: 230,
                                                   width: 270,
-                                                  child:
-                                                      Column(children: <Widget>[
+                                                  child:Column(children: <Widget>[
                                                     Align(
                                                       alignment:
                                                           Alignment.topRight,
@@ -440,11 +426,11 @@ class _MyCompanyAddState extends State<MyCompanyAdd> {
                                                           icon: Icon(
                                                             Icons.cancel,
                                                             size: 25,
-                                                            color: Colors
-                                                                    .deepOrange[
-                                                                600],
+                                                            color: Colors.deepOrange[600],
                                                           ),
-                                                          onPressed: () {}),
+                                                          onPressed: () {
+                                                            roomsProvider.deleteRoom(room[index]);
+                                                          }),
                                                     ),
                                                     Padding(
                                                         padding:
@@ -459,28 +445,19 @@ class _MyCompanyAddState extends State<MyCompanyAdd> {
                                                                   TextAlign
                                                                       .left,
                                                               style: TextStyle(
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
-                                                                  color: Colors
-                                                                          .green[
-                                                                      700],
+                                                                  fontWeight:FontWeight.bold,
+                                                                  color: Colors.green[700],
                                                                   fontSize: 20),
                                                             ),
-                                                            Text(room[index]
-                                                                .type),
+                                                            Text(room[index].type),
                                                             Text(
                                                               'Price/night',
                                                               textAlign:
                                                                   TextAlign
                                                                       .left,
                                                               style: TextStyle(
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
-                                                                  color: Colors
-                                                                          .green[
-                                                                      700],
+                                                                  fontWeight:FontWeight.bold,
+                                                                  color: Colors.green[700],
                                                                   fontSize: 20),
                                                             ),
                                                             Text(room[index]
@@ -491,23 +468,16 @@ class _MyCompanyAddState extends State<MyCompanyAdd> {
                                                                   TextAlign
                                                                       .left,
                                                               style: TextStyle(
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
-                                                                  color: Colors
-                                                                          .green[
-                                                                      700],
+                                                                  fontWeight:FontWeight.bold,
+                                                                  color: Colors.green[700],
                                                                   fontSize: 20),
                                                             ),
                                                             Container(
                                                                 height: 40,
-                                                                child: Text(room[
-                                                                        index]
-                                                                    .benefits)),
+                                                                child: Text(room[index].benefits)),
                                                             Text(
                                                               '\n',
-                                                              style: TextStyle(
-                                                                  fontSize: 8),
+                                                              style: TextStyle(fontSize: 8),
                                                             ),
                                                           ],
                                                         ))
@@ -528,8 +498,6 @@ class _MyCompanyAddState extends State<MyCompanyAdd> {
         if (imgs[i].uid == u) {
           l.add(imgs[i]);
         }
-    int x = l.length;
-    print("$x din provider");
     return l;
   }
 
@@ -540,8 +508,6 @@ class _MyCompanyAddState extends State<MyCompanyAdd> {
         if (room[i].uidHotel == u) {
           l.add(room[i]);
         }
-    int x = l.length;
-    print("$x din provider");
     return l;
   }
 }
