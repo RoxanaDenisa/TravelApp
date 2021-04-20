@@ -82,6 +82,8 @@ class _MyInfoForm extends State<MyInfoForm> {
             ButtonWidget(
               title: 'Confirm',
               onPressed: () {
+                widget.reservationProvider.setUidClient(
+                    FirebaseAuth.instance.currentUser.uid.toString());
                 widget.reservationProvider.toSave();
                 Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => MyClientHomepage()));

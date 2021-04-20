@@ -7,6 +7,7 @@ class Reservation {
   final int pret;
   final int nrZile;
   final String status;
+  final String uidClient;
   Reservation(
       {this.uid,
       this.name,
@@ -15,7 +16,8 @@ class Reservation {
       this.tipCamera,
       this.pret,
       this.nrZile,
-      this.status});
+      this.status,
+      this.uidClient});
   Map<String, dynamic> toMap() {
     return {
       'uid': uid,
@@ -26,17 +28,20 @@ class Reservation {
       'pret': pret,
       'nrZile': nrZile,
       'status': status,
+      'uidClient': uidClient,
     };
   }
-  
+
   String getPriceString() {
     int x = this.pret;
     return '$x';
   }
-String getDaysString() {
+
+  String getDaysString() {
     int x = this.nrZile;
     return '$x';
   }
+
   Reservation.fromFirestore(Map<String, dynamic> f)
       : uid = f['uid'],
         name = f['name'],
@@ -45,5 +50,6 @@ String getDaysString() {
         tipCamera = f['tipCamera'],
         pret = f['pret'],
         status = f['status'],
+        uidClient = f['uidClient'],
         nrZile = f['nrZile'];
 }
