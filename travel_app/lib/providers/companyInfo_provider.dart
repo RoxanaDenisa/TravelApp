@@ -8,12 +8,26 @@ class CompanyInfoProvider with ChangeNotifier {
   String _name;
   String _searchKey;
   String _searchKey2;
+  String _mail;
+  String _phone;
   final ciService = CompanyInfoService();
   String get uid => _uid;
   String get location => _location;
   String get name => _name;
   String get searchKey => _searchKey;
   String get searchKey2 => _searchKey2;
+  String get mail => _mail;
+  String get phone => _phone;
+  setMail(String value) {
+    _mail = value;
+    notifyListeners();
+  }
+
+  setPhone(String value) {
+    _phone = value;
+    notifyListeners();
+  }
+
   setLocation(String value) {
     _location = value;
     notifyListeners();
@@ -46,18 +60,20 @@ class CompanyInfoProvider with ChangeNotifier {
           location: location,
           name: name,
           searchKey: searchKey,
-          searchKey2: searchKey2);
+          searchKey2: searchKey2,
+          mail: mail,
+          phone: phone);
       ciService.infoCompAdd(newProduct);
-     
     } else {
       var newProduct = MyCompanyInfo(
           uid: _uid,
           location: _location,
           name: _name,
           searchKey: _searchKey,
-          searchKey2: _searchKey2);
+          searchKey2: _searchKey2,
+          mail: _mail,
+          phone: _phone);
       ciService.infoCompAdd(newProduct);
-      
     }
   }
 
@@ -66,5 +82,8 @@ class CompanyInfoProvider with ChangeNotifier {
     _uid = companyInfo.uid;
     _location = companyInfo.location;
     _searchKey = companyInfo.searchKey;
+    _searchKey2 = companyInfo.searchKey2;
+    _mail = companyInfo.mail;
+    _phone = companyInfo.phone;
   }
 }

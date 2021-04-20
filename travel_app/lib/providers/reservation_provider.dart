@@ -11,17 +11,24 @@ class ReservationProvider with ChangeNotifier {
   int _pret;
   int _nrZile;
   String _status;
+  String _uidClient;
   final reservationService = ReservationService();
   String get uid => _uid;
   String get name => _name;
   String get nrPersoane => _nrPersoane;
   String get perioada => _perioada;
   String get tipCamera => _tipCamera;
+  String get uidClient => _uidClient;
   int get pret => _pret;
   int get nrZile => _nrZile;
   String get status => _status;
   setNrZile(int value) {
     _nrZile = value;
+    notifyListeners();
+  }
+
+  setUidClient(String value) {
+    _uidClient = value;
     notifyListeners();
   }
 
@@ -62,31 +69,33 @@ class ReservationProvider with ChangeNotifier {
 
   toSave() {
     if (_uid == null) {
-    var newProduct = Reservation(
-        uid: uid,
-        name: name,
-        nrPersoane: nrPersoane,
-        perioada: perioada,
-        tipCamera: tipCamera,
-        pret: pret,
-        nrZile: nrZile,
-        status: status);
-    reservationService.reservationAdd(newProduct);
+      var newProduct = Reservation(
+          uid: uid,
+          name: name,
+          nrPersoane: nrPersoane,
+          perioada: perioada,
+          tipCamera: tipCamera,
+          pret: pret,
+          nrZile: nrZile,
+          status: status,
+          uidClient: uidClient);
+      reservationService.reservationAdd(newProduct);
+    } else {
+      var newProduct = Reservation(
+          uid: _uid,
+          name: _name,
+          nrPersoane: _nrPersoane,
+          perioada: _perioada,
+          tipCamera: _tipCamera,
+          pret: _pret,
+          nrZile: _nrZile,
+          status: _status,
+          uidClient: _uidClient);
+      reservationService.reservationAdd(newProduct);
+    }
   }
-  else{
-    var newProduct = Reservation(
-        uid: _uid,
-        name: _name,
-        nrPersoane: _nrPersoane,
-        perioada: _perioada,
-        tipCamera: _tipCamera,
-        pret: _pret,
-        nrZile: _nrZile,
-        status: _status);
-    reservationService.reservationAdd(newProduct);
+
+  deleteReservation(Reservation r) {
+    reservationService.removeReservation(r);
   }
-  }
-  deleteReservation(Reservation r){
-     reservationService.removeReservation(r);
-   }
 }

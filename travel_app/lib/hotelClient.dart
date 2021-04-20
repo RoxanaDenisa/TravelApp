@@ -237,7 +237,32 @@ class _MyHotelClient extends State<MyHotelClient> {
                                                         },
                                                       ))
                                                     ]))),
-                                      ]))
+                                      ])),
+                              Text(
+                                'Contact:',
+                                style: TextStyle(
+                                    fontSize: 18, fontWeight: FontWeight.bold),
+                              ),
+                              Text(
+                                '\n',
+                                style: TextStyle(fontSize: 7),
+                              ),
+                              Text(
+                                'Mail: ' + mci.mail,
+                                style: TextStyle(fontSize: 14),
+                              ),
+                              Text(
+                                '\n',
+                                style: TextStyle(fontSize: 7),
+                              ),
+                              Text(
+                                'Phone: ' + mci.phone,
+                                style: TextStyle(fontSize: 14),
+                              ),
+                              Text(
+                                '\n',
+                                style: TextStyle(fontSize: 7),
+                              ),
                             ]))
                   ]);
                 })

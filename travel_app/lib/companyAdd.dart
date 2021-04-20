@@ -28,11 +28,15 @@ class MyCompanyAdd extends StatefulWidget {
 class _MyCompanyAddState extends State<MyCompanyAdd> {
   String imageURL;
   final nameController = TextEditingController();
+  final mailController = TextEditingController();
+  final phoneController = TextEditingController();
   final locationController = TextEditingController();
   @override
   void dispose() {
     nameController.dispose();
     locationController.dispose();
+    mailController.dispose();
+    phoneController.dispose();
     super.dispose();
   }
 
@@ -41,6 +45,8 @@ class _MyCompanyAddState extends State<MyCompanyAdd> {
     if (widget.companyInfo == null) {
       nameController.text = "";
       locationController.text = "";
+      mailController.text = "";
+      phoneController.text = "";
       new Future.delayed(Duration.zero, () {
         final companyInfoProvider =
             Provider.of<CompanyInfoProvider>(context, listen: false);
@@ -49,11 +55,12 @@ class _MyCompanyAddState extends State<MyCompanyAdd> {
     } else {
       nameController.text = widget.companyInfo.name;
       locationController.text = widget.companyInfo.location;
-
+      mailController.text = widget.companyInfo.mail;
+      phoneController.text = widget.companyInfo.phone;
       new Future.delayed(Duration.zero, () {
-        final medicineProvider =
+        final ciProvider =
             Provider.of<CompanyInfoProvider>(context, listen: false);
-        medicineProvider.loadValues(widget.companyInfo);
+        ciProvider.loadValues(widget.companyInfo);
       });
     }
     super.initState();
@@ -157,19 +164,26 @@ class _MyCompanyAddState extends State<MyCompanyAdd> {
                                                             .instance;
                                                     PickedFile image;
                                                     //check permission
-                                                    await Permission.photos.request();
+                                                    await Permission.photos
+                                                        .request();
                                                     var permissionStatus =
                                                         await Permission
                                                             .photos.status;
                                                     if (permissionStatus
                                                         .isGranted) {
                                                       //select image
-                                                      image = await _picker.getImage(source: ImageSource.gallery);
+                                                      image = await _picker
+                                                          .getImage(
+                                                              source:
+                                                                  ImageSource
+                                                                      .gallery);
 
                                                       if (image != null) {
                                                         //upload to firebase
-                                                        String uuid = Uuid().v1();
-                                                        var file =File(image.path);
+                                                        String uuid =
+                                                            Uuid().v1();
+                                                        var file =
+                                                            File(image.path);
                                                         var snapshot =
                                                             await _storage
                                                                 .ref()
@@ -177,10 +191,12 @@ class _MyCompanyAddState extends State<MyCompanyAdd> {
                                                                 .child(uuid)
                                                                 .putFile(file);
                                                         var downloadURL =
-                                                            await snapshot.ref.getDownloadURL();
+                                                            await snapshot.ref
+                                                                .getDownloadURL();
                                                         //print(downloadURL);
                                                         setState(() {
-                                                          imageURL =downloadURL;
+                                                          imageURL =
+                                                              downloadURL;
                                                         });
                                                         imageProvider
                                                             .setImage(imageURL);
@@ -291,13 +307,55 @@ class _MyCompanyAddState extends State<MyCompanyAdd> {
                                 )),
                               ),
                               Text(
+                                '\nMail:',
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                    fontSize: 15,
+                                    color: Colors.green[600],
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              TextField(
+                                controller: mailController,
+                                selectionHeightStyle: ui.BoxHeightStyle.tight,
+                                onChanged: (value) {
+                                  companyInfoProvider.setMail(value);
+                                },
+                                decoration: InputDecoration(
+                                    border: UnderlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: Colors.green[800]),
+                                )),
+                              ),
+                              Text(
+                                '\nPhone:',
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                    fontSize: 15,
+                                    color: Colors.green[600],
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              TextField(
+                                controller: phoneController,
+                                selectionHeightStyle: ui.BoxHeightStyle.tight,
+                                onChanged: (value) {
+                                  companyInfoProvider.setPhone(value);
+                                },
+                                decoration: InputDecoration(
+                                    border: UnderlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: Colors.green[800]),
+                                )),
+                              ),
+                              Text(
                                 '\n',
                                 style: TextStyle(fontSize: 5),
                               ),
                               Container(
                                 padding: EdgeInsets.only(
                                     right: 10,
-                                    left: (MediaQuery.of(context).size.width * 1 /2)),
+                                    left: (MediaQuery.of(context).size.width *
+                                        1 /
+                                        2)),
                                 width: 40,
                                 height: 20,
                                 child: MaterialButton(
@@ -309,7 +367,7 @@ class _MyCompanyAddState extends State<MyCompanyAdd> {
                                     companyInfoProvider.toSave();
                                   },
                                   child: Text(
-                                    'Upgrade',
+                                    'Update',
                                     style: TextStyle(
                                         fontSize: 10.0, color: Colors.white),
                                   ),
@@ -398,7 +456,8 @@ class _MyCompanyAddState extends State<MyCompanyAdd> {
                                                   Navigator.of(context).push(
                                                       MaterialPageRoute(
                                                           builder: (context) =>
-                                                              MyCompanyAdd(widget.companyInfo)));
+                                                              MyCompanyAdd(widget
+                                                                  .companyInfo)));
                                                 },
                                                 title: 'Save',
                                               )),
@@ -414,11 +473,13 @@ class _MyCompanyAddState extends State<MyCompanyAdd> {
                                                   decoration: BoxDecoration(
                                                       color: Colors.brown[50],
                                                       border: Border.all(
-                                                        color: Colors.deepOrange[600],
+                                                        color: Colors
+                                                            .deepOrange[600],
                                                       )),
                                                   height: 230,
                                                   width: 270,
-                                                  child:Column(children: <Widget>[
+                                                  child:
+                                                      Column(children: <Widget>[
                                                     Align(
                                                       alignment:
                                                           Alignment.topRight,
@@ -426,10 +487,15 @@ class _MyCompanyAddState extends State<MyCompanyAdd> {
                                                           icon: Icon(
                                                             Icons.cancel,
                                                             size: 25,
-                                                            color: Colors.deepOrange[600],
+                                                            color: Colors
+                                                                    .deepOrange[
+                                                                600],
                                                           ),
                                                           onPressed: () {
-                                                            roomsProvider.deleteRoom(room[index]);
+                                                            roomsProvider
+                                                                .deleteRoom(
+                                                                    room[
+                                                                        index]);
                                                           }),
                                                     ),
                                                     Padding(
@@ -445,19 +511,28 @@ class _MyCompanyAddState extends State<MyCompanyAdd> {
                                                                   TextAlign
                                                                       .left,
                                                               style: TextStyle(
-                                                                  fontWeight:FontWeight.bold,
-                                                                  color: Colors.green[700],
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  color: Colors
+                                                                          .green[
+                                                                      700],
                                                                   fontSize: 20),
                                                             ),
-                                                            Text(room[index].type),
+                                                            Text(room[index]
+                                                                .type),
                                                             Text(
                                                               'Price/night',
                                                               textAlign:
                                                                   TextAlign
                                                                       .left,
                                                               style: TextStyle(
-                                                                  fontWeight:FontWeight.bold,
-                                                                  color: Colors.green[700],
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  color: Colors
+                                                                          .green[
+                                                                      700],
                                                                   fontSize: 20),
                                                             ),
                                                             Text(room[index]
@@ -468,16 +543,23 @@ class _MyCompanyAddState extends State<MyCompanyAdd> {
                                                                   TextAlign
                                                                       .left,
                                                               style: TextStyle(
-                                                                  fontWeight:FontWeight.bold,
-                                                                  color: Colors.green[700],
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  color: Colors
+                                                                          .green[
+                                                                      700],
                                                                   fontSize: 20),
                                                             ),
                                                             Container(
                                                                 height: 40,
-                                                                child: Text(room[index].benefits)),
+                                                                child: Text(room[
+                                                                        index]
+                                                                    .benefits)),
                                                             Text(
                                                               '\n',
-                                                              style: TextStyle(fontSize: 8),
+                                                              style: TextStyle(
+                                                                  fontSize: 8),
                                                             ),
                                                           ],
                                                         ))
