@@ -21,37 +21,59 @@ class _MySignUp extends State<MySignUp> {
     return new Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(backgroundColor: Colors.deepOrange[600]),
-      body: Center(
-          child: Container(
-        width: 270,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'SignUp',
-              style: TextStyle(
-                  color: Colors.green[700],
-                  fontSize: 40,
-                  fontWeight: FontWeight.bold,
-                  shadows: [
-                    Shadow(
-                        color: Colors.black,
-                        blurRadius: 2.0,
-                        offset: Offset(4, 1))
-                  ]),
-            ),
-            Text('\n', style: TextStyle(fontSize: 10)),
-            TextFieldWidget(
-              hintText: 'Name',
+      body: ListView(
+        padding: EdgeInsets.only(
+            top: (MediaQuery.of(context).size.width * 1 / 5),
+            left: 40,
+            right: 40),
+        children: <Widget>[
+          Text(
+            'SignUp',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+                color: Colors.green[700],
+                fontSize: 40,
+                fontWeight: FontWeight.bold,
+                shadows: [
+                  Shadow(
+                      color: Colors.black,
+                      blurRadius: 2.0,
+                      offset: Offset(4, 1))
+                ]),
+          ),
+          Text('\n', style: TextStyle(fontSize: 10)),
+          Container(
+            width: 280,
+            child: TextField(
+              key: Key("value"),
               obscureText: false,
-              lines: 1,
-              prefixIconData: Icons.verified_user,
+              decoration: InputDecoration(
+                hintText: "Name",
+                prefixIcon: Icon(
+                  Icons.verified_user,
+                  size: 18,
+                  color: Colors.black,
+                ),
+                filled: true,
+                fillColor: Colors.deepOrange[200],
+                enabledBorder: UnderlineInputBorder(
+                  borderRadius: BorderRadius.circular(40),
+                  borderSide: BorderSide(color: Colors.green[800]),
+                ),
+                focusedBorder: UnderlineInputBorder(
+                  borderRadius: BorderRadius.circular(40),
+                  borderSide: BorderSide(color: Colors.green[800]),
+                ),
+              ),
               onChanged: (value) {
                 setState(() => name = value);
               },
             ),
-            Text('\n', style: TextStyle(fontSize: 2)),
-            TextFieldWidget(
+          ),
+          Text('\n', style: TextStyle(fontSize: 2)),
+          Container(
+            width: 280,
+            child: TextFieldWidget(
               hintText: 'Username',
               lines: 1,
               obscureText: false,
@@ -60,18 +82,40 @@ class _MySignUp extends State<MySignUp> {
                 setState(() => uname = value);
               },
             ),
-            Text('\n', style: TextStyle(fontSize: 2)),
-            TextFieldWidget(
-              lines: 1,
-              hintText: 'Password',
+          ),
+          Text('\n', style: TextStyle(fontSize: 2)),
+          Container(
+            width: 280,
+            child: TextField(
+              key: Key("password"),
               obscureText: true,
-              prefixIconData: Icons.vpn_key,
+              decoration: InputDecoration(
+                hintText: "Password",
+                prefixIcon: Icon(
+                  Icons.vpn_key_sharp,
+                  size: 18,
+                  color: Colors.black,
+                ),
+                filled: true,
+                fillColor: Colors.deepOrange[200],
+                enabledBorder: UnderlineInputBorder(
+                  borderRadius: BorderRadius.circular(40),
+                  borderSide: BorderSide(color: Colors.green[800]),
+                ),
+                focusedBorder: UnderlineInputBorder(
+                  borderRadius: BorderRadius.circular(40),
+                  borderSide: BorderSide(color: Colors.green[800]),
+                ),
+              ),
               onChanged: (value) {
                 setState(() => password = value);
               },
             ),
-            Text('\n', style: TextStyle(fontSize: 2)),
-            TextFieldWidget(
+          ),
+          Text('\n', style: TextStyle(fontSize: 2)),
+          Container(
+            width: 280,
+            child: TextFieldWidget(
               lines: 1,
               hintText: 'Phone Number',
               obscureText: false,
@@ -80,8 +124,11 @@ class _MySignUp extends State<MySignUp> {
                 setState(() => phone = value);
               },
             ),
-            Text('\n', style: TextStyle(fontSize: 2)),
-            TextFieldWidget(
+          ),
+          Text('\n', style: TextStyle(fontSize: 2)),
+          Container(
+            width: 280,
+            child: TextFieldWidget(
               lines: 1,
               hintText: 'Email',
               obscureText: false,
@@ -90,8 +137,11 @@ class _MySignUp extends State<MySignUp> {
                 setState(() => email = value);
               },
             ),
-            Text('\n', style: TextStyle(fontSize: 2)),
-            Row(
+          ),
+          Text('\n', style: TextStyle(fontSize: 2)),
+          Container(
+            width: 280,
+            child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 Text('Customer', style: TextStyle(fontSize: 14)),
@@ -122,43 +172,32 @@ class _MySignUp extends State<MySignUp> {
                 ),
               ],
             ),
-            ButtonWidget(
-              title: 'Create',
-              onPressed: () async {
-                int sw = 0;
-                if (password.length > 6 && sw == 0) {
-                  try {
-                    await Firebase.initializeApp();
-                    await FirebaseAuth.instance.createUserWithEmailAndPassword(
-                        email: email, password: password);
-                    User updateUser = FirebaseAuth.instance.currentUser;
-                    updateUser.updateProfile(displayName: name);
-                    userSetup(name, email, phone, uname, checkBoxValue,
-                        checkBoxValue2);
-                  } on FirebaseAuthException catch (_) {
-                    Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context) => MySignUp()));
-                  } catch (e) {
-                    print(e.toString());
-                  }
-                } else
-                  print('nu');
-              },
-            )
-          ],
-        ),
-      )),
-      floatingActionButton: IconButton(
-        onPressed: () {
-          Navigator.of(context)
-              .push(MaterialPageRoute(builder: (context) => MyLogin()));
-        },
-        splashColor: Colors.grey[600],
-        icon: Icon(
-          Icons.arrow_back,
-          color: Colors.grey[600],
-        ),
-        iconSize: 40,
+          ),
+          ButtonWidget(
+            title: 'Create',
+            onPressed: () async {
+              int sw = 0;
+              if (password.length > 6 && sw == 0) {
+                try {
+                  await Firebase.initializeApp();
+                  await FirebaseAuth.instance.createUserWithEmailAndPassword(
+                      email: email, password: password);
+                  User updateUser = FirebaseAuth.instance.currentUser;
+                  updateUser.updateProfile(displayName: name);
+                  userSetup(
+                      name, email, phone, uname, checkBoxValue, checkBoxValue2);
+                } on FirebaseAuthException catch (_) {
+                  Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => MySignUp()));
+                } catch (e) {
+                  print(e.toString());
+                }
+              } else
+                print('nu');
+            },
+          ),
+          Text('\n', style: TextStyle(fontSize: 14)),
+        ],
       ),
     );
   }
