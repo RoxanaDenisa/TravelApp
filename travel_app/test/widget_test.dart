@@ -7,24 +7,21 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:travel_app/main.dart';
+import 'package:travel_app/buttonWidget.dart';
+import 'package:travel_app/login.dart';
+import 'package:travel_app/signUp.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(MyApp());
-
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
-
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
+  testWidgets("test login widget", (WidgetTester tester) async {
+    final addField = find.byKey(ValueKey("email"));
+    final addTxt = find.byKey(ValueKey("password"));
+    final addButton = find.byType(ButtonWidget);
+    await tester.pumpWidget(MaterialApp(home: MyLogin()));
+    await tester.enterText(addField, "x@y.com");
+    await tester.enterText(addTxt, "asdfghj");
+    await tester.tap(addButton);
     await tester.pump();
-
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    expect(find.text("x@y.com"), findsOneWidget);
+    expect(find.text("asdfghj"), findsOneWidget);
   });
 }
