@@ -28,29 +28,61 @@ class _MyLoginState extends State<MyLogin> {
         children: <Widget>[
           Image(image: AssetImage('assets/logo.png'), width: 200, height: 200),
           Text('\n', style: TextStyle(fontSize: 4)),
-          TextFieldWidget(
+          TextField(
             onChanged: (value) {
               setState(() {
                 _email = value.trim();
               });
             },
-            hintText: 'Email',
-            obscureText: false,
-            lines: 1,
-            prefixIconData: Icons.person,
-          ),
+            key: Key("email"),
+              obscureText: true, decoration: InputDecoration(
+              hintText: "Email",
+              prefixIcon: Icon(Icons.person,
+                size:18,
+                color: Colors.black,
+              ),
+              filled: true,
+              fillColor: Colors.deepOrange[200],
+              
+            enabledBorder: UnderlineInputBorder(
+                borderRadius: BorderRadius.circular(40),
+                borderSide: BorderSide(color: Colors.green[800]),
+              ),
+              focusedBorder: UnderlineInputBorder(
+                borderRadius: BorderRadius.circular(40),
+                borderSide: BorderSide(color: Colors.green[800]),
+                
+              ),),
+                ),
           Text('\n', style: TextStyle(fontSize: 4)),
-          TextFieldWidget(
+          TextField(
             onChanged: (value) {
               setState(() {
                 _password = value.trim();
               });
             },
-            hintText: 'Password',
+            
             obscureText: true,
-            lines: 1,
-            prefixIconData: Icons.vpn_key,
-          ),
+            key: Key("password"),   
+            decoration: InputDecoration(
+            hintText: "Password",
+            prefixIcon: Icon(Icons.vpn_key_sharp,
+              size:18,
+              color: Colors.black,
+            ),
+            filled: true,
+            fillColor: Colors.deepOrange[200],
+            
+          enabledBorder: UnderlineInputBorder(
+              borderRadius: BorderRadius.circular(40),
+              borderSide: BorderSide(color: Colors.green[800]),
+            ),
+            focusedBorder: UnderlineInputBorder(
+              borderRadius: BorderRadius.circular(40),
+              borderSide: BorderSide(color: Colors.green[800]),
+              
+            ),),
+              ),
           Text('\n', style: TextStyle(fontSize: 10)),
           Container(
               height: 80,
