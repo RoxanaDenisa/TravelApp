@@ -24,4 +24,18 @@ void main() {
     expect(find.text("x@y.com"), findsOneWidget);
     expect(find.text("asdfghj"), findsOneWidget);
   });
+
+   testWidgets("test sign up widget", (WidgetTester tester)async{
+     final addField=find.byKey(ValueKey("value"));
+     final addTxt=find.byKey(ValueKey("password"));
+     final addButton=find.byType(ButtonWidget);
+    await tester.pumpWidget(MaterialApp(home: MySignUp()));
+    await tester.enterText(addField, "text");
+    await tester.enterText(addTxt, "passtxt");
+     await tester.tap(addButton);
+    await tester.pump();
+     expect(find.text("text"),findsOneWidget);
+     expect(find.text("passtxt"),findsOneWidget);
+  });
+  
 }
